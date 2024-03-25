@@ -1,6 +1,8 @@
 from django.contrib import admin
 from account.models import User
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from .models import Category, Technology, Testimonial, Project, Service, BlogPost, Comment, CompanyInformation, TeamMember, Auther, ContactInquiry
+
 
 class UserModelAdmin(BaseUserAdmin):
   # The fields to be used in displaying the User model.
@@ -28,3 +30,51 @@ class UserModelAdmin(BaseUserAdmin):
 
 # Now register the new UserModelAdmin...
 admin.site.register(User, UserModelAdmin)
+
+
+
+# Define ModelAdmin classes for each model
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'type')
+
+@admin.register(Technology)
+class TechnologyAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'description')
+
+@admin.register(Testimonial)
+class TestimonialAdmin(admin.ModelAdmin):
+    list_display = ('id', 'client_name', 'client_company', 'content', 'project')
+
+@admin.register(Project)
+class ProjectAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'description', 'link', 'start_date', 'end_date', 'status')
+
+@admin.register(Service)
+class ServiceAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'description', 'icon_image')
+
+@admin.register(BlogPost)
+class BlogPostAdmin(admin.ModelAdmin):
+    list_display = ('id', 'title', 'category', 'published_date', 'author')
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ('id', 'author_name', 'author_email', 'content', 'posted_date', 'post')
+
+@admin.register(CompanyInformation)
+class CompanyInformationAdmin(admin.ModelAdmin):
+    list_display = ('id', 'about_us', 'mission', 'vision')
+
+@admin.register(TeamMember)
+class TeamMemberAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'role', 'bio', 'image')
+
+@admin.register(Auther)
+class AutherAdmin(admin.ModelAdmin):
+    list_display = ('id', 'username', 'email', 'created_at', 'updated_at')
+
+@admin.register(ContactInquiry)
+class ContactInquiryAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'email', 'message', 'received_date', 'status')
