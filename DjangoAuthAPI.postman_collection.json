@@ -18,7 +18,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"email\":\"sonam@example.com\",\r\n    \"name\":\"Sonam\",\r\n    \"password\":\"123456\",\r\n    \"password2\":\"123456\",\r\n    \"tc\":\"True\"   \r\n}",
+					"raw": "{\r\n    \"email\":\"sona@example.com\",\r\n    \"name\":\"Sonam\",\r\n    \"password\":\"123456\",\r\n    \"password2\":\"123456\",\r\n    \"tc\":\"True\"   \r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
