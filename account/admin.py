@@ -33,11 +33,11 @@ admin.site.register(User, UserModelAdmin)
 
 
 
-# Define ModelAdmin classes for each model
+
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'type')
+    list_display = ('id', 'name')
 
 @admin.register(Technology)
 class TechnologyAdmin(admin.ModelAdmin):
@@ -47,9 +47,19 @@ class TechnologyAdmin(admin.ModelAdmin):
 class TestimonialAdmin(admin.ModelAdmin):
     list_display = ('id', 'client_name', 'client_company', 'content', 'project')
 
+# @admin.register(Project)
+# class ProjectAdmin(admin.ModelAdmin):
+#     list_display = ('id', 'name', 'description', 'link', 'category', 'technologies', 'start_date', 'end_date', 'status')
+
+
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'description', 'link', 'start_date', 'end_date', 'status')
+    list_display = ('id', 'name', 'description', 'link', 'category', 'get_technologies', 'start_date', 'end_date', 'status')
+
+    def get_technologies(self, obj):
+        technologies = obj.technologies.all().values_list('name', flat=True)
+        return ", ".join(technologies)  # Join technology names with comma
+
 
 @admin.register(Service)
 class ServiceAdmin(admin.ModelAdmin):

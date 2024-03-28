@@ -79,15 +79,11 @@ class User(AbstractBaseUser):
 
 
 
-class CategoryType(Enum):
-    PROJECT = "project"
-    BLOG_POST = "blog_post"
-    # Add more categories as needed
+
 
 class Category(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
-    type = models.CharField(max_length=20, choices=[(tag.name, tag.value) for tag in CategoryType])
 
     def __str__(self):
         return self.name
@@ -110,6 +106,8 @@ class Project(models.Model):
     description = models.TextField()
     images = models.JSONField(default=list)  # Array of image URLs
     link = models.URLField()
+    category = models.ForeignKey(Category, on_delete=models.CASCADE,null=True, default="")
+    technologies = models.ManyToManyField('Technology', related_name='projects')
     start_date = models.DateField()
     end_date = models.DateField(null=True, blank=True)
     
@@ -133,7 +131,7 @@ class Service(models.Model):
 class BlogPost(models.Model):
     title = models.CharField(max_length=255)
     content = models.TextField()
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE,null=True, default="")
     published_date = models.DateTimeField()
     author = models.ForeignKey('Auther', on_delete=models.CASCADE)
     # Assuming comments are separate for scalability
@@ -151,7 +149,7 @@ class CompanyInformation(models.Model):
     mission = models.TextField()
     vision = models.TextField()
     # Assuming team members are separate for scalability
-    # team_members = models.ManyToManyField('TeamMember')
+    # team_members = models.ManyToManyField('TeamMember',null=True, default="")
     # contact = EmbeddedField(ContactInfo)
 
 class TeamMember(models.Model):
