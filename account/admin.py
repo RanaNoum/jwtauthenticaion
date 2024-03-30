@@ -1,7 +1,7 @@
 from django.contrib import admin
 from account.models import User
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .models import Category, Technology, Testimonial, Project, Service, BlogPost, Comment, CompanyInformation, TeamMember, Auther, ContactInquiry
+from .models import Category, Technology, Testimonial, Project, Service, BlogPost, Comment, CompanyInformation, TeamMember, Author, ContactInquiry
 
 
 class UserModelAdmin(BaseUserAdmin):
@@ -37,11 +37,11 @@ admin.site.register(User, UserModelAdmin)
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name')
+    list_display = ('id', 'name', 'blog_post_categories')
 
 @admin.register(Technology)
 class TechnologyAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'description')
+    list_display = ('id', 'name', 'description', 'technology_used')
 
 @admin.register(Testimonial)
 class TestimonialAdmin(admin.ModelAdmin):
@@ -54,20 +54,18 @@ class TestimonialAdmin(admin.ModelAdmin):
 
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'description', 'link', 'category', 'get_technologies', 'start_date', 'end_date', 'status')
+    list_display = ('id', 'name', 'description', 'link', 'category', 'technologies', 'start_date', 'end_date', 'status')
 
-    def get_technologies(self, obj):
-        technologies = obj.technologies.all().values_list('name', flat=True)
-        return ", ".join(technologies)  # Join technology names with comma
+    
 
 
 @admin.register(Service)
 class ServiceAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'description', 'icon_image')
+    list_display = ('id', 'name', 'description', 'icon_image', 'related_projects')
 
 @admin.register(BlogPost)
 class BlogPostAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'category', 'published_date', 'author')
+    list_display = ('id', 'title', 'content', 'category', 'published_date', 'author')
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
@@ -75,15 +73,15 @@ class CommentAdmin(admin.ModelAdmin):
 
 @admin.register(CompanyInformation)
 class CompanyInformationAdmin(admin.ModelAdmin):
-    list_display = ('id', 'about_us', 'mission', 'vision')
+    list_display = ('id', 'about_us', 'mission', 'vision', 'contact')
 
 @admin.register(TeamMember)
 class TeamMemberAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'role', 'bio', 'image')
+    list_display = ('id', 'name', 'role', 'bio', 'image', 'social_media_links')
 
-@admin.register(Auther)
+@admin.register(Author)
 class AutherAdmin(admin.ModelAdmin):
-    list_display = ('id', 'username', 'email', 'created_at', 'updated_at')
+    list_display = ('id', 'username', 'email', 'roles', 'created_at', 'updated_at')
 
 @admin.register(ContactInquiry)
 class ContactInquiryAdmin(admin.ModelAdmin):

@@ -19,8 +19,8 @@ from .models import Project, Service, BlogPost, CompanyInformation, ContactInqui
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.admin.views.decorators import staff_member_required
 from rest_framework import viewsets
-from .models import Category, Technology, Testimonial, Project, Service, BlogPost, Comment, CompanyInformation, TeamMember, Auther, ContactInquiry
-from .serializers import CategorySerializer, TechnologySerializer, TestimonialSerializer, ProjectSerializer, ServiceSerializer, BlogPostSerializer, CommentSerializer, CompanyInformationSerializer, TeamMemberSerializer, AutherSerializer, ContactInquirySerializer
+from .models import Category, Technology, Testimonial, Project, Service, BlogPost, Comment, CompanyInformation, TeamMember, Author, ContactInquiry
+from .serializers import CategorySerializer, TechnologySerializer, TestimonialSerializer, ProjectSerializer, ServiceSerializer, BlogPostSerializer, CommentSerializer, CompanyInformationSerializer, TeamMemberSerializer, AuthorSerializer, ContactInquirySerializer
 
 
 
@@ -123,9 +123,9 @@ class TeamMemberViewSet(viewsets.ModelViewSet):
     queryset = TeamMember.objects.all()
     serializer_class = TeamMemberSerializer
 
-class AutherViewSet(viewsets.ModelViewSet):
-    queryset = Auther.objects.all()
-    serializer_class = AutherSerializer
+class AuthorViewSet(viewsets.ModelViewSet):
+    queryset = Author.objects.all()
+    serializer_class = AuthorSerializer
 
 class ContactInquiryViewSet(viewsets.ModelViewSet):
     queryset = ContactInquiry.objects.all()

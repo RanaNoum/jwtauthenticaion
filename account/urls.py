@@ -10,7 +10,7 @@ from .views import (
     CommentViewSet,
     CompanyInformationViewSet,
     TeamMemberViewSet,
-    AutherViewSet,
+    AuthorViewSet,
     ContactInquiryViewSet,
     SendPasswordResetEmailView,
     UserChangePasswordView,
@@ -31,11 +31,11 @@ router.register(r'blogposts', BlogPostViewSet, basename='blogpost')
 router.register(r'comments', CommentViewSet, basename='comment')
 router.register(r'companyinformation', CompanyInformationViewSet, basename='companyinformation')
 router.register(r'teammembers', TeamMemberViewSet, basename='teammember')
-router.register(r'authers', AutherViewSet, basename='auther')
+router.register(r'authors', AuthorViewSet, basename='author')
 router.register(r'contactinquiries', ContactInquiryViewSet, basename='contactinquiry')
 
 urlpatterns = [
-    path('/', include(router.urls)),  # Corrected path (empty string '')
+    path('models/', include(router.urls)),  # Corrected path (empty string '')
     path('register/', UserRegistrationView.as_view(), name='register'),
     path('login/', UserLoginView.as_view(), name='login'),
     path('profile/', UserProfileView.as_view(), name='profile'),

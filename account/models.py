@@ -82,15 +82,16 @@ class User(AbstractBaseUser):
 
 
 class Category(models.Model):
-    id = models.AutoField(primary_key=True)
+    
     name = models.CharField(max_length=255)
-
+    blog_post_categories=models.CharField(max_length=255)
     def __str__(self):
         return self.name
 
 class Technology(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
+    technology_used=models.TextField()
 
 class Testimonial(models.Model):
     client_name = models.CharField(max_length=100)
@@ -104,10 +105,10 @@ class Project(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
     description = models.TextField()
-    images = models.JSONField(default=list)  # Array of image URLs
+    
     link = models.URLField()
-    category = models.ForeignKey(Category, on_delete=models.CASCADE,null=True, default="")
-    technologies = models.ManyToManyField('Technology', related_name='projects')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    technologies = models.ForeignKey(Technology, on_delete=models.CASCADE)
     start_date = models.DateField()
     end_date = models.DateField(null=True, blank=True)
     
@@ -126,14 +127,14 @@ class Service(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
     icon_image = models.URLField()
-    related_projects = models.ManyToManyField(Project)
+    related_projects = models.ForeignKey(Project, on_delete=models.CASCADE)
 
 class BlogPost(models.Model):
     title = models.CharField(max_length=255)
     content = models.TextField()
-    category = models.ForeignKey(Category, on_delete=models.CASCADE,null=True, default="")
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
     published_date = models.DateTimeField()
-    author = models.ForeignKey('Auther', on_delete=models.CASCADE)
+    author = models.ForeignKey('Author', on_delete=models.CASCADE)
     # Assuming comments are separate for scalability
     # comments = models.ManyToManyField('Comment')
 
@@ -149,21 +150,20 @@ class CompanyInformation(models.Model):
     mission = models.TextField()
     vision = models.TextField()
     # Assuming team members are separate for scalability
-    # team_members = models.ManyToManyField('TeamMember',null=True, default="")
-    # contact = EmbeddedField(ContactInfo)
+    contact = models.IntegerField()
 
 class TeamMember(models.Model):
     name = models.CharField(max_length=100)
     role = models.CharField(max_length=100)
     bio = models.TextField()
     image = models.URLField()
-    social_media_links = models.JSONField(default=dict)
+    social_media_links = models.CharField(max_length=255)
 
-class Auther(models.Model):
+class Author(models.Model):
     username = models.CharField(max_length=100)
     email = models.EmailField()
-    password_hash = models.CharField(max_length=255)
-    roles = models.JSONField(default=list)
+    
+    roles = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Project, Service, BlogPost, Category, Technology, Testimonial, Comment, CompanyInformation, TeamMember, Auther, ContactInquiry
+from .models import Project, Service, BlogPost, Category, Technology, Testimonial, Comment, CompanyInformation, TeamMember, Author, ContactInquiry
 from rest_framework import serializers
 from account.models import User
 from django.utils.encoding import smart_str, force_bytes, DjangoUnicodeDecodeError
@@ -125,7 +125,7 @@ class UserPasswordResetSerializer(serializers.Serializer):
 
 
 
-from .models import Category, Technology, Testimonial, Project, Service, BlogPost, Comment, CompanyInformation, TeamMember, Auther, ContactInquiry
+from .models import Category, Technology, Testimonial, Project, Service, BlogPost, Comment, CompanyInformation, TeamMember, Author, ContactInquiry
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -147,19 +147,18 @@ class TeamMemberSerializer(serializers.ModelSerializer):
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ['id', 'name']
+        fields = '__all__'
 
 
 class TechnologySerializer(serializers.ModelSerializer):
     class Meta:
         model = Technology
-        fields = ['id', 'name', 'description']
-
+        fields = '__all__'
 
 class TestimonialSerializer(serializers.ModelSerializer):
     class Meta:
         model = Testimonial
-        fields = ['id', 'client_name', 'client_company', 'content', 'project']
+        fields = '__all__'
 
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -194,9 +193,9 @@ class BlogPostSerializer(serializers.ModelSerializer):
 
 
 
-class AutherSerializer(serializers.ModelSerializer):
+class AuthorSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Auther
+        model = Author
         fields = '__all__'
 
 
