@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager,AbstractBaseUser
 from enum import Enum
+from django.conf import settings  # Import settings to reference the AUTH_USER_MODEL
 #  Custom User Manager
 class UserManager(BaseUserManager):
   def create_user(self, email, name, tc, password=None, password2=None):
@@ -101,27 +102,50 @@ class Testimonial(models.Model):
 
 
 
+# class Project(models.Model):
+#     id = models.AutoField(primary_key=True)
+#     name = models.CharField(max_length=255)
+#     description = models.TextField()
+    
+#     link = models.URLField()
+#     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+#     technologies = models.ForeignKey(Technology, on_delete=models.CASCADE)
+#     start_date = models.DateField()
+#     end_date = models.DateField(null=True, blank=True)
+    
+#     class Status(models.TextChoices):
+#         ACTIVE = 'Active', 'Active'
+#         COMPLETED = 'Completed', 'Completed'
+#         PAUSED = 'Paused', 'Paused'
+        
+#     status = models.CharField(max_length=20, choices=Status.choices)
+    
+#     def __str__(self):
+#         return self.name
+
+
 class Project(models.Model):
-    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
     description = models.TextField()
-    
     link = models.URLField()
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='user_projects')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE,related_name='Blog_post_categories')
     technologies = models.ForeignKey(Technology, on_delete=models.CASCADE)
+    # categories = models.ManyToManyField(Category, related_name='projects')  # Adjusted to ManyToManyField
+    # technologies = models.ManyToManyField(Technology, related_name='projects')  # Adjusted to ManyToManyField
     start_date = models.DateField()
     end_date = models.DateField(null=True, blank=True)
-    
-    class Status(models.TextChoices):
-        ACTIVE = 'Active', 'Active'
-        COMPLETED = 'Completed', 'Completed'
-        PAUSED = 'Paused', 'Paused'
-        
-    status = models.CharField(max_length=20, choices=Status.choices)
-    
+    status = models.CharField(
+        max_length=20,
+        choices=[('Active', 'Active'), ('Completed', 'Completed'), ('Paused', 'Paused')]
+    )
+
     def __str__(self):
         return self.name
 
+    @property
+    def technology_used(self):
+        return self.technologies.technology_used
 
 class Service(models.Model):
     name = models.CharField(max_length=255)
@@ -129,14 +153,26 @@ class Service(models.Model):
     icon_image = models.URLField()
     related_projects = models.ForeignKey(Project, on_delete=models.CASCADE)
 
+# class BlogPost(models.Model):
+#     title = models.CharField(max_length=255)
+#     content = models.TextField()
+#     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+#     published_date = models.DateTimeField()
+#     author = models.ForeignKey('Author', on_delete=models.CASCADE)
+    # Assuming comments are separate for scalability
+    # comments = models.ManyToManyField('Comment')
+
+
 class BlogPost(models.Model):
     title = models.CharField(max_length=255)
     content = models.TextField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     published_date = models.DateTimeField()
-    author = models.ForeignKey('Author', on_delete=models.CASCADE)
-    # Assuming comments are separate for scalability
-    # comments = models.ManyToManyField('Comment')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='user_blogposts')
+
+    def __str__(self):
+        return self.title
+
 
 class Comment(models.Model):
     author_name = models.CharField(max_length=100)
@@ -159,13 +195,33 @@ class TeamMember(models.Model):
     image = models.URLField()
     social_media_links = models.CharField(max_length=255)
 
+# class Author(models.Model):
+#     username = models.CharField(max_length=100)
+#     email = models.EmailField()
+    
+#     roles = models.CharField(max_length=255)
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     updated_at = models.DateTimeField(auto_now=True)
+
+class RoleChoices(models.TextChoices):
+    ADMIN = 'Admin', 'Administrator'
+    EDITOR = 'Editor', 'Editor'
+    CONTRIBUTOR = 'Contributor', 'Contributor'
+    GUEST = 'Guest', 'Guest'
+
+
 class Author(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     username = models.CharField(max_length=100)
     email = models.EmailField()
-    
-    roles = models.CharField(max_length=255)
+
+    roles = models.CharField(max_length=50, choices=RoleChoices.choices, default=RoleChoices.CONTRIBUTOR)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.username
+
 
 class ContactInquiry(models.Model):
     name = models.CharField(max_length=100)

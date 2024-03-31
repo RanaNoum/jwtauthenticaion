@@ -52,20 +52,32 @@ class TestimonialAdmin(admin.ModelAdmin):
 #     list_display = ('id', 'name', 'description', 'link', 'category', 'technologies', 'start_date', 'end_date', 'status')
 
 
+# @admin.register(Project)
+# class ProjectAdmin(admin.ModelAdmin):
+#     list_display = ('id', 'name', 'description', 'link', 'category', 'technologies', 'start_date', 'end_date', 'status')
+
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'description', 'link', 'category', 'technologies', 'start_date', 'end_date', 'status')
-
+    list_display = ['id', 'name', 'description', 'link', 'user', 'category', 'start_date', 'end_date', 'status']
+    list_filter = ['status', 'category', 'user']
+    search_fields = ['name', 'description']
     
 
 
 @admin.register(Service)
 class ServiceAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'description', 'icon_image', 'related_projects')
+    # filter_horizontal = ['related_projects']  # Allows selection of multiple projects.
+# @admin.register(BlogPost)
+# class BlogPostAdmin(admin.ModelAdmin):
+#     list_display = ('id', 'title', 'content', 'category', 'published_date', 'author')
 
 @admin.register(BlogPost)
 class BlogPostAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'content', 'category', 'published_date', 'author')
+    list_display = ['id', 'title', 'content', 'category', 'published_date', 'user']
+    list_filter = ['category', 'user']
+    search_fields = ['title', 'content']
+
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
@@ -79,10 +91,18 @@ class CompanyInformationAdmin(admin.ModelAdmin):
 class TeamMemberAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'role', 'bio', 'image', 'social_media_links')
 
+# @admin.register(Author)
+# class AutherAdmin(admin.ModelAdmin):
+#     list_display = ('id', 'username', 'email', 'roles', 'created_at', 'updated_at')
+
 @admin.register(Author)
-class AutherAdmin(admin.ModelAdmin):
-    list_display = ('id', 'username', 'email', 'roles', 'created_at', 'updated_at')
+class AuthorAdmin(admin.ModelAdmin):
+    list_display = ['user', 'username', 'email', 'roles', 'created_at', 'updated_at']
+    search_fields = ['username', 'email']
+
 
 @admin.register(ContactInquiry)
 class ContactInquiryAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'email', 'message', 'received_date', 'status')
+    list_filter = ['status']
+    search_fields = ['name', 'email']

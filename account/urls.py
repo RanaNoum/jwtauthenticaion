@@ -35,7 +35,7 @@ router.register(r'authors', AuthorViewSet, basename='author')
 router.register(r'contactinquiries', ContactInquiryViewSet, basename='contactinquiry')
 
 urlpatterns = [
-    path('models/', include(router.urls)),  # Corrected path (empty string '')
+    path('lists/', include(router.urls)),  # Corrected path (empty string '')
     path('register/', UserRegistrationView.as_view(), name='register'),
     path('login/', UserLoginView.as_view(), name='login'),
     path('profile/', UserProfileView.as_view(), name='profile'),
