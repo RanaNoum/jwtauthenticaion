@@ -21,7 +21,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from rest_framework import viewsets
 from .models import Category, Technology, Testimonial, Project, Service, BlogPost, Comment, CompanyInformation, TeamMember, Author, ContactInquiry
 from .serializers import CategorySerializer, TechnologySerializer, TestimonialSerializer, ProjectSerializer, ServiceSerializer, BlogPostSerializer, CommentSerializer, CompanyInformationSerializer, TeamMemberSerializer, AuthorSerializer, ContactInquirySerializer
-
+from .permissions import IsGetRequestOrAdmin
 
 
 # Generate Token Manually
@@ -90,43 +90,54 @@ class UserPasswordResetView(APIView):
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    permission_classes = [IsGetRequestOrAdmin]  # Apply the custom permission
 
 class TechnologyViewSet(viewsets.ModelViewSet):
     queryset = Technology.objects.all()
     serializer_class = TechnologySerializer
+    permission_classes = [IsGetRequestOrAdmin]  # Apply the custom permission
 
 class TestimonialViewSet(viewsets.ModelViewSet):
     queryset = Testimonial.objects.all()
     serializer_class = TestimonialSerializer
+    permission_classes = [IsGetRequestOrAdmin]  # Apply the custom permission
 
 class ProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
+    permission_classes = [IsGetRequestOrAdmin]  # Apply the custom permission
 
 class ServiceViewSet(viewsets.ModelViewSet):
     queryset = Service.objects.all()
     serializer_class = ServiceSerializer
+    permission_classes = [IsGetRequestOrAdmin]  # Apply the custom permission
 
 class BlogPostViewSet(viewsets.ModelViewSet):
     queryset = BlogPost.objects.all()
     serializer_class = BlogPostSerializer
+    permission_classes = [IsGetRequestOrAdmin]  # Apply the custom permission
 
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
+    permission_classes = [IsGetRequestOrAdmin]  # Apply the custom permission
 
 class CompanyInformationViewSet(viewsets.ModelViewSet):
     queryset = CompanyInformation.objects.all()
     serializer_class = CompanyInformationSerializer
+    permission_classes = [IsGetRequestOrAdmin]  # Apply the custom permission
 
 class TeamMemberViewSet(viewsets.ModelViewSet):
     queryset = TeamMember.objects.all()
     serializer_class = TeamMemberSerializer
+    permission_classes = [IsGetRequestOrAdmin]  # Apply the custom permission
 
 class AuthorViewSet(viewsets.ModelViewSet):
     queryset = Author.objects.all()
     serializer_class = AuthorSerializer
+    permission_classes = [IsGetRequestOrAdmin]  # Apply the custom permission
 
 class ContactInquiryViewSet(viewsets.ModelViewSet):
     queryset = ContactInquiry.objects.all()
     serializer_class = ContactInquirySerializer
+    permission_classes = [IsGetRequestOrAdmin]  # Apply the custom permission
