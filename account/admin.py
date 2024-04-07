@@ -1,7 +1,7 @@
 from django.contrib import admin
 from account.models import User
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .models import Category, Technology, Testimonial, Project, Service, BlogPost, Comment, CompanyInformation, TeamMember, Author, ContactInquiry
+from .models import Categorie, Technologie, Testimonial, Project, Service, BlogPost, Comment, CompanyInformation, TeamMember, Author, ContactInquirie
 
 
 class UserModelAdmin(BaseUserAdmin):
@@ -34,11 +34,11 @@ admin.site.register(User, UserModelAdmin)
 
 
 
-@admin.register(Category)
+@admin.register(Categorie)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'blog_post_categories')
 
-@admin.register(Technology)
+@admin.register(Technologie)
 class TechnologyAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'description', 'technology_used')
 
@@ -86,7 +86,7 @@ class AuthorAdmin(admin.ModelAdmin):
     search_fields = ['username', 'email']
 
 
-@admin.register(ContactInquiry)
+@admin.register(ContactInquirie)
 class ContactInquiryAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'email', 'message', 'received_date', 'status')
     list_filter = ['status']

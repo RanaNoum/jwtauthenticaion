@@ -15,11 +15,11 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
-from .models import Project, Service, BlogPost, CompanyInformation, ContactInquiry, User
+from .models import Project, Service, BlogPost, CompanyInformation, ContactInquirie, User
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.admin.views.decorators import staff_member_required
 from rest_framework import viewsets
-from .models import Category, Technology, Testimonial, Project, Service, BlogPost, Comment, CompanyInformation, TeamMember, Author, ContactInquiry
+from .models import Categorie, Technologie, Testimonial, Project, Service, BlogPost, Comment, CompanyInformation, TeamMember, Author, ContactInquirie
 from .serializers import CategorySerializer, TechnologySerializer, TestimonialSerializer, ProjectSerializer, ServiceSerializer, BlogPostSerializer, CommentSerializer, CompanyInformationSerializer, TeamMemberSerializer, AuthorSerializer, ContactInquirySerializer
 from .permissions import IsGetRequestOrAdmin
 
@@ -88,12 +88,12 @@ class UserPasswordResetView(APIView):
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
-    queryset = Category.objects.all()
+    queryset = Categorie.objects.all()
     serializer_class = CategorySerializer
     permission_classes = [IsGetRequestOrAdmin]  # Apply the custom permission
 
 class TechnologyViewSet(viewsets.ModelViewSet):
-    queryset = Technology.objects.all()
+    queryset = Technologie.objects.all()
     serializer_class = TechnologySerializer
     permission_classes = [IsGetRequestOrAdmin]  # Apply the custom permission
 
@@ -138,6 +138,6 @@ class AuthorViewSet(viewsets.ModelViewSet):
     permission_classes = [IsGetRequestOrAdmin]  # Apply the custom permission
 
 class ContactInquiryViewSet(viewsets.ModelViewSet):
-    queryset = ContactInquiry.objects.all()
+    queryset = ContactInquirie.objects.all()
     serializer_class = ContactInquirySerializer
     permission_classes = [IsGetRequestOrAdmin]  # Apply the custom permission

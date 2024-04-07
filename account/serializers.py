@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Project, Service, BlogPost, Category, Technology, Testimonial, Comment, CompanyInformation, TeamMember, Author, ContactInquiry
+from .models import Project, Service, BlogPost, Categorie, Technologie, Testimonial, Comment, CompanyInformation, TeamMember, Author, ContactInquirie
 from rest_framework import serializers
 from account.models import User
 from django.utils.encoding import smart_str, force_bytes, DjangoUnicodeDecodeError
@@ -125,7 +125,7 @@ class UserPasswordResetSerializer(serializers.Serializer):
 
 
 
-from .models import Category, Technology, Testimonial, Project, Service, BlogPost, Comment, CompanyInformation, TeamMember, Author, ContactInquiry
+from .models import Categorie, Technologie, Testimonial, Project, Service, BlogPost, Comment, CompanyInformation, TeamMember, Author, ContactInquirie
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -146,13 +146,13 @@ class TeamMemberSerializer(serializers.ModelSerializer):
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
-        model = Category
+        model = Categorie
         fields = '__all__'
 
 
 class TechnologySerializer(serializers.ModelSerializer):
     class Meta:
-        model = Technology
+        model = Technologie
         fields = '__all__'
 
 class TestimonialSerializer(serializers.ModelSerializer):
@@ -201,7 +201,7 @@ class AuthorSerializer(serializers.ModelSerializer):
 
 class ContactInquirySerializer(serializers.ModelSerializer):
     class Meta:
-        model = ContactInquiry
+        model = ContactInquirie
         fields = '__all__'
 
 

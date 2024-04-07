@@ -85,14 +85,14 @@ class User(AbstractBaseUser,PermissionsMixin):
 
 
 
-class Category(models.Model):
+class Categorie(models.Model):
     
     name = models.CharField(max_length=255)
     blog_post_categories=models.CharField(max_length=255)
     def __str__(self):
         return self.name
 
-class Technology(models.Model):
+class Technologie(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
     technology_used=models.TextField()
@@ -109,8 +109,8 @@ class Project(models.Model):
     description = models.TextField()
     link = models.URLField()
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='user_projects')
-    category = models.ForeignKey(Category, on_delete=models.CASCADE,related_name='Blog_post_categories')
-    technologies = models.ForeignKey(Technology, on_delete=models.CASCADE)
+    category = models.ForeignKey(Categorie, on_delete=models.CASCADE,related_name='Blog_post_categories')
+    technologies = models.ForeignKey(Technologie, on_delete=models.CASCADE)
 
     start_date = models.DateField()
     end_date = models.DateField(null=True, blank=True)
@@ -136,7 +136,7 @@ class Service(models.Model):
 class BlogPost(models.Model):
     title = models.CharField(max_length=255)
     content = models.TextField()
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey(Categorie, on_delete=models.CASCADE)
     published_date = models.DateTimeField()
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='user_blogposts')
 
@@ -185,7 +185,7 @@ class Author(models.Model):
         return self.username
 
 
-class ContactInquiry(models.Model):
+class ContactInquirie(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField()
     message = models.TextField()
