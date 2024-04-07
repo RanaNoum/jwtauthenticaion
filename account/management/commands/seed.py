@@ -12,7 +12,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         admin_email = 'admin@example.com'
-        admin_password = 'adminpassword'
+        admin_password = 'password'
         tc_agreement = True  # Assuming this is a terms and conditions agreement field
 
         if not User.objects.filter(email=admin_email).exists():
@@ -24,19 +24,7 @@ class Command(BaseCommand):
             )
             self.stdout.write(self.style.SUCCESS('Successfully created admin user'))
         
-        # ... the rest of your seeding logic for categories, technologies, etc.
-
-# class Command(BaseCommand):
-#     help = 'Seeds the database with initial data'
-
-#     def handle(self, *args, **kwargs):
-#         # Create an admin user
-#         User = get_user_model()
-#         if not User.objects.filter(username='admin').exists():
-#             User.objects.create_superuser('admin', 'admin@example.com', 'adminpassword')
-#             self.stdout.write(self.style.SUCCESS('Successfully created admin user'))
-
-        # Seed Category data
+        
         categories = ['Category 1', 'Category 2', 'Category 3']
         for category_name in categories:
             Category.objects.get_or_create(name=category_name)

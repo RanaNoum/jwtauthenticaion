@@ -15,8 +15,7 @@ class UserModelAdmin(BaseUserAdmin):
       ('Personal info', {'fields': ('name', 'tc')}),
       ('Permissions', {'fields': ('is_admin',)}),
   )
-  # add_fieldsets is not a standard ModelAdmin attribute. UserModelAdmin
-  # overrides get_fieldsets to use this attribute when creating a user.
+ 
   add_fieldsets = (
       (None, {
           'classes': ('wide',),
@@ -47,14 +46,6 @@ class TechnologyAdmin(admin.ModelAdmin):
 class TestimonialAdmin(admin.ModelAdmin):
     list_display = ('id', 'client_name', 'client_company', 'content', 'project')
 
-# @admin.register(Project)
-# class ProjectAdmin(admin.ModelAdmin):
-#     list_display = ('id', 'name', 'description', 'link', 'category', 'technologies', 'start_date', 'end_date', 'status')
-
-
-# @admin.register(Project)
-# class ProjectAdmin(admin.ModelAdmin):
-#     list_display = ('id', 'name', 'description', 'link', 'category', 'technologies', 'start_date', 'end_date', 'status')
 
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
@@ -68,9 +59,6 @@ class ProjectAdmin(admin.ModelAdmin):
 class ServiceAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'description', 'icon_image', 'related_projects')
     # filter_horizontal = ['related_projects']  # Allows selection of multiple projects.
-# @admin.register(BlogPost)
-# class BlogPostAdmin(admin.ModelAdmin):
-#     list_display = ('id', 'title', 'content', 'category', 'published_date', 'author')
 
 @admin.register(BlogPost)
 class BlogPostAdmin(admin.ModelAdmin):
@@ -91,9 +79,6 @@ class CompanyInformationAdmin(admin.ModelAdmin):
 class TeamMemberAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'role', 'bio', 'image', 'social_media_links')
 
-# @admin.register(Author)
-# class AutherAdmin(admin.ModelAdmin):
-#     list_display = ('id', 'username', 'email', 'roles', 'created_at', 'updated_at')
 
 @admin.register(Author)
 class AuthorAdmin(admin.ModelAdmin):
