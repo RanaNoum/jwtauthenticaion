@@ -19,8 +19,8 @@ from .models import Project, Service, BlogPost, CompanyInformation, ContactInqui
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.admin.views.decorators import staff_member_required
 from rest_framework import viewsets
-from .models import Categorie, Technologie, Testimonial, Project, Service, BlogPost, Comment, CompanyInformation, TeamMember, Author, ContactInquirie
-from .serializers import CategorySerializer, TechnologySerializer, TestimonialSerializer, ProjectSerializer, ServiceSerializer, BlogPostSerializer, CommentSerializer, CompanyInformationSerializer, TeamMemberSerializer, AuthorSerializer, ContactInquirySerializer
+from .models import Categorie, Technologie, Case, Career, Testimonial, Project, Service, BlogPost, Comment, CompanyInformation, TeamMember, Author, ContactInquirie, Event
+from .serializers import CategorySerializer, TechnologySerializer, CaseSerializer, CareerSerializer, TestimonialSerializer, ProjectSerializer, EventSerializer, ServiceSerializer, BlogPostSerializer, CommentSerializer, CompanyInformationSerializer, TeamMemberSerializer, AuthorSerializer, ContactInquirySerializer
 from .permissions import IsGetRequestOrAdmin
 
 
@@ -140,4 +140,34 @@ class AuthorViewSet(viewsets.ModelViewSet):
 class ContactInquiryViewSet(viewsets.ModelViewSet):
     queryset = ContactInquirie.objects.all()
     serializer_class = ContactInquirySerializer
+    permission_classes = [IsGetRequestOrAdmin]  # Apply the custom permission
+
+
+class EventViewSet(viewsets.ModelViewSet):
+    queryset = Event.objects.all()
+    serializer_class = EventSerializer
+    permission_classes = [IsGetRequestOrAdmin]  # Apply the custom permission
+
+
+
+class CaseViewSet(viewsets.ModelViewSet):
+    queryset = Case.objects.all()
+    serializer_class = CaseSerializer
+    permission_classes = [IsGetRequestOrAdmin]  # Apply the custom permission
+
+    # def get_queryset(self):
+    #     """
+    #     Optionally restricts the returned cases to a given user,
+    #     by filtering against a `username` query parameter in the URL.
+    #     """
+    #     queryset = self.queryset
+    #     username = self.request.query_params.get('username')
+    #     if username is not None:
+    #         queryset = queryset.filter(created_by__username=username)
+    #     return queryset    
+
+
+class CareerViewSet(viewsets.ModelViewSet):
+    queryset = Career.objects.all()
+    serializer_class = CareerSerializer
     permission_classes = [IsGetRequestOrAdmin]  # Apply the custom permission

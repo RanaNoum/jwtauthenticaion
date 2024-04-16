@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Project, Service, BlogPost, Categorie, Technologie, Testimonial, Comment, CompanyInformation, TeamMember, Author, ContactInquirie
+from .models import Project, Service, BlogPost, Event, Case, Career, Categorie, Technologie, Testimonial, Comment, CompanyInformation, TeamMember, Author, ContactInquirie
 from rest_framework import serializers
 from account.models import User
 from django.utils.encoding import smart_str, force_bytes, DjangoUnicodeDecodeError
@@ -141,7 +141,20 @@ class TeamMemberSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class EventSerializer(serializers.ModelSerializer):
+    
+    is_upcoming = serializers.ReadOnlyField()
+    duration = serializers.ReadOnlyField()
 
+    class Meta:
+        model = Event
+        fields = '__all__'
+
+
+class CaseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Case
+        fields = '__all__'  # Serialize all fields from the Case model
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -181,6 +194,7 @@ class ServiceSerializer(serializers.ModelSerializer):
 
 
 class BlogPostSerializer(serializers.ModelSerializer):
+    category = CategorySerializer(read_only=True)
     # category = CategorySerializer()
     # user = serializers.CharField(source='user.username', read_only=True)  
     # Username from User model (read-only)
@@ -188,9 +202,6 @@ class BlogPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = BlogPost
         fields = '__all__'
-
-
-
 
 
 class AuthorSerializer(serializers.ModelSerializer):
@@ -210,3 +221,8 @@ class CompanyInformationSerializer(serializers.ModelSerializer):
         model = CompanyInformation
         fields = '__all__'
 
+
+class CareerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Career
+        fields = '__all__'

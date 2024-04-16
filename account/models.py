@@ -2,6 +2,11 @@ from django.db import models
 from django.contrib.auth.models import BaseUserManager,AbstractBaseUser, PermissionsMixin
 from enum import Enum
 from django.conf import settings  # Import settings to reference the AUTH_USER_MODEL
+
+
+
+
+
 #  Custom User Manager
 class UserManager(BaseUserManager):
   def create_user(self, email, name, tc, password=None, password2=None):
@@ -91,6 +96,33 @@ class Categorie(models.Model):
     blog_post_categories=models.CharField(max_length=255)
     def __str__(self):
         return self.name
+    
+
+class Event(models.Model):
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
+    location = models.CharField(max_length=255, blank=True, null=True)
+    organizer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='organized_events')
+    image = models.ImageField(upload_to='events_images/', blank=True, null=True)
+    registration_link = models.URLField(blank=True, null=True)
+
+    def __str__(self):
+        return self.title
+
+    @property
+    def is_upcoming(self):
+        from django.utils import timezone
+        return self.start_time > timezone.now()
+
+    @property
+    def duration(self):
+        return self.end_time - self.start_time
+
+    class Meta:
+        ordering = ['start_time']
+
 
 class Technologie(models.Model):
     name = models.CharField(max_length=100)
@@ -197,4 +229,63 @@ class ContactInquirie(models.Model):
     ]
     status = models.CharField(max_length=20, choices=STATUS_CHOICES)
 
+
+
+class Case(models.Model):
+    STATUS_CHOICES = [
+        ('open', 'Open'),
+        ('in_progress', 'In Progress'),
+        ('closed', 'Closed'),
+        ('on_hold', 'On Hold')
+    ]
+    PRIORITY_CHOICES = [
+        ('high', 'High'),
+        ('medium', 'Medium'),
+        ('low', 'Low')
+    ]
+
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    case_number = models.CharField(max_length=120, unique=True)
+    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='open')
+    priority = models.CharField(max_length=50, choices=PRIORITY_CHOICES, default='medium')
+    assigned_to = models.ForeignKey(User, related_name='assigned_cases', on_delete=models.SET_NULL, null=True)
+    created_by = models.ForeignKey(User, related_name='created_cases', on_delete=models.CASCADE)
+    created_date = models.DateTimeField(auto_now_add=True)
+    modified_date = models.DateTimeField(auto_now=True)
+    due_date = models.DateTimeField(null=True, blank=True)
+    resolution = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.case_number} - {self.title}"
+
+    class Meta:
+        ordering = ['-created_date']
+
+
+
+
+
+class Career(models.Model):
+    JOB_TYPES = [
+        ('full_time', 'Full Time'),
+        ('part_time', 'Part Time'),
+        ('contract', 'Contract'),
+        ('internship', 'Internship'),
+    ]
+
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    location = models.CharField(max_length=255)
+    job_type = models.CharField(max_length=10, choices=JOB_TYPES, default='full_time')
+    posted_date = models.DateField(auto_now_add=True)
+    closing_date = models.DateField()
+
+    def __str__(self):
+        return f"{self.title} ({self.job_type})"
+
+    class Meta:
+        verbose_name = 'Career'
+        verbose_name_plural = 'Careers'
+        ordering = ['-posted_date']
 

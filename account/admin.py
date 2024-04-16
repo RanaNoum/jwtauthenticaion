@@ -1,7 +1,7 @@
 from django.contrib import admin
 from account.models import User
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .models import Categorie, Technologie, Testimonial, Project, Service, BlogPost, Comment, CompanyInformation, TeamMember, Author, ContactInquirie
+from .models import Categorie, Event, Case, Career, Technologie, Testimonial, Project, Service, BlogPost, Comment, CompanyInformation, TeamMember, Author, ContactInquirie
 
 
 class UserModelAdmin(BaseUserAdmin):
@@ -37,6 +37,26 @@ admin.site.register(User, UserModelAdmin)
 @admin.register(Categorie)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'blog_post_categories')
+
+@admin.register(Event)
+class EventAdmin(admin.ModelAdmin):
+    list_display = ('title', 'start_time', 'end_time', 'organizer', 'location', 'is_upcoming')
+    list_filter = ('start_time', 'end_time', 'organizer')
+    search_fields = ('title', 'description', 'location') 
+
+@admin.register(Career)
+class CareerAdmin(admin.ModelAdmin):
+    list_display = ('title', 'job_type', 'location', 'posted_date', 'closing_date')
+    list_filter = ('job_type', 'location')
+    search_fields = ('title', 'description')
+
+@admin.register(Case)
+class CaseAdmin(admin.ModelAdmin):
+    list_display = ('case_number', 'title', 'status', 'priority', 'assigned_to', 'created_by', 'created_date')
+    list_filter = ('status', 'priority', 'created_date')
+    search_fields = ('title', 'description', 'case_number')
+    date_hierarchy = 'created_date'
+
 
 @admin.register(Technologie)
 class TechnologyAdmin(admin.ModelAdmin):
