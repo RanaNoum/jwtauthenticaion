@@ -19,6 +19,7 @@ from .views import (
     EventViewSet,
     CaseViewSet,
     CareerViewSet,
+    PricingEstimateViewSet,
     UserPasswordResetView,
 )
 app_name = 'account'
@@ -28,6 +29,7 @@ router.register(r'categories', CategoryViewSet, basename='categorie')
 router.register(r'events', EventViewSet, basename='event')
 router.register(r'cases', CaseViewSet, basename='case')
 router.register(r'careers', CareerViewSet, basename='career')
+router.register(r'pricing', PricingEstimateViewSet, basename='pricing')
 router.register(r'technologies', TechnologyViewSet, basename='technologie')
 router.register(r'testimonials', TestimonialViewSet, basename='testimonial')
 router.register(r'projects', ProjectViewSet, basename='project')
@@ -45,7 +47,8 @@ urlpatterns = [
     path('api/categories/<int:pk>/', CategoryViewSet.as_view({'get': 'retrieve'}), name='category-detail'),
     path('api/events/<int:pk>/', EventViewSet.as_view({'get': 'retrieve'}), name='event-detail'),
     path('api/cases/<int:pk>/', CaseViewSet.as_view({'get': 'retrieve'}), name='case-detail'),
-     path('api/careers/<int:pk>/', CareerViewSet.as_view({'get': 'retrieve'}), name='career-detail'),
+    path('api/careers/<int:pk>/', CareerViewSet.as_view({'get': 'retrieve'}), name='career-detail'),
+    path('api/pricing-estimates/<int:pk>/', PricingEstimateViewSet.as_view({'get': 'retrieve'}), name='pricing-detail'),
     path('api/technologies/<int:pk>/', TechnologyViewSet.as_view({'get': 'retrieve'}), name='technology-detail'),
     path('api/testimonials/<int:pk>/', TestimonialViewSet.as_view({'get': 'retrieve'}), name='testimonial-detail'),
     path('api/services/<int:pk>/', ServiceViewSet.as_view({'get': 'retrieve'}), name='service-detail'),

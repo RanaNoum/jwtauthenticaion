@@ -19,8 +19,8 @@ from .models import Project, Service, BlogPost, CompanyInformation, ContactInqui
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.admin.views.decorators import staff_member_required
 from rest_framework import viewsets
-from .models import Categorie, Technologie, Case, Career, Testimonial, Project, Service, BlogPost, Comment, CompanyInformation, TeamMember, Author, ContactInquirie, Event
-from .serializers import CategorySerializer, TechnologySerializer, CaseSerializer, CareerSerializer, TestimonialSerializer, ProjectSerializer, EventSerializer, ServiceSerializer, BlogPostSerializer, CommentSerializer, CompanyInformationSerializer, TeamMemberSerializer, AuthorSerializer, ContactInquirySerializer
+from .models import Categorie, Technologie, Case, Career,  PricingEstimate, Testimonial, Project, Service, BlogPost, Comment, CompanyInformation, TeamMember, Author, ContactInquirie, Event
+from .serializers import CategorySerializer, TechnologySerializer, CaseSerializer, CareerSerializer, PricingEstimateSerializer, TestimonialSerializer, ProjectSerializer, EventSerializer, ServiceSerializer, BlogPostSerializer, CommentSerializer, CompanyInformationSerializer, TeamMemberSerializer, AuthorSerializer, ContactInquirySerializer
 from .permissions import IsGetRequestOrAdmin
 
 
@@ -170,4 +170,10 @@ class CaseViewSet(viewsets.ModelViewSet):
 class CareerViewSet(viewsets.ModelViewSet):
     queryset = Career.objects.all()
     serializer_class = CareerSerializer
+    permission_classes = [IsGetRequestOrAdmin]  # Apply the custom permission
+
+
+class PricingEstimateViewSet(viewsets.ModelViewSet):
+    queryset = PricingEstimate.objects.all()
+    serializer_class = PricingEstimateSerializer
     permission_classes = [IsGetRequestOrAdmin]  # Apply the custom permission

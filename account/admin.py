@@ -1,7 +1,7 @@
 from django.contrib import admin
 from account.models import User
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .models import Categorie, Event, Case, Career, Technologie, Testimonial, Project, Service, BlogPost, Comment, CompanyInformation, TeamMember, Author, ContactInquirie
+from .models import Categorie, Event, Case, Career, Technologie, Testimonial, Project, Service, BlogPost, Comment, CompanyInformation, TeamMember, Author, ContactInquirie, PricingEstimate
 
 
 class UserModelAdmin(BaseUserAdmin):
@@ -111,3 +111,11 @@ class ContactInquiryAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'email', 'message', 'received_date', 'status')
     list_filter = ['status']
     search_fields = ['name', 'email']
+
+
+@admin.register(PricingEstimate)
+class PricingEstimateAdmin(admin.ModelAdmin):
+    list_display = ['service_type', 'client_information', 'submitted_on', 'total_estimated_cost', 'status']
+    list_filter = ['service_type', 'complexity', 'status', 'submitted_on']
+    search_fields = ['client_information', 'feature_set']
+    date_hierarchy = 'submitted_on'

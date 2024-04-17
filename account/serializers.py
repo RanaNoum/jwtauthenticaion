@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Project, Service, BlogPost, Event, Case, Career, Categorie, Technologie, Testimonial, Comment, CompanyInformation, TeamMember, Author, ContactInquirie
+from .models import Project, Service, BlogPost, Event, Case, Career, PricingEstimate, Categorie, Technologie, Testimonial, Comment, CompanyInformation, TeamMember, Author, ContactInquirie
 from rest_framework import serializers
 from account.models import User
 from django.utils.encoding import smart_str, force_bytes, DjangoUnicodeDecodeError
@@ -225,4 +225,11 @@ class CompanyInformationSerializer(serializers.ModelSerializer):
 class CareerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Career
+        fields = '__all__'
+
+
+
+class PricingEstimateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PricingEstimate
         fields = '__all__'

@@ -289,3 +289,42 @@ class Career(models.Model):
         verbose_name_plural = 'Careers'
         ordering = ['-posted_date']
 
+
+
+
+class PricingEstimate(models.Model):
+    SERVICE_TYPE_CHOICES = [
+        ('web', 'Web Development'),
+        ('mobile', 'Mobile App Development'),
+        ('software', 'Software Development'),
+    ]
+    COMPLEXITY_CHOICES = [
+        ('low', 'Low'),
+        ('medium', 'Medium'),
+        ('high', 'High'),
+    ]
+
+    service_type = models.CharField(max_length=100, choices=SERVICE_TYPE_CHOICES)
+    feature_set = models.TextField(help_text="Detailed description of the requested features")
+    complexity = models.CharField(max_length=10, choices=COMPLEXITY_CHOICES)
+    estimated_hours = models.DecimalField(max_digits=6, decimal_places=2, help_text="Estimated hours to complete the project")
+    hourly_rate = models.DecimalField(max_digits=10, decimal_places=2, help_text="Hourly rate for the service")
+    additional_costs = models.DecimalField(max_digits=10, decimal_places=2, default=0, help_text="Additional costs")
+    discounts = models.DecimalField(max_digits=10, decimal_places=2, default=0, help_text="Discounts applied")
+    total_estimated_cost = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, help_text="Automatically calculated total cost")
+    client_information = models.CharField(max_length=255, help_text="Information about the client")
+    submitted_on = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=100, default='pending', help_text="Status of the estimate")
+
+    def save(self, *args, **kwargs):
+        # Calculate total estimated cost
+        self.total_estimated_cost = (self.estimated_hours * self.hourly_rate) + self.additional_costs - self.discounts
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.service_type} for {self.client_information} on {self.submitted_on.strftime('%Y-%m-%d')}"
+
+    class Meta:
+        verbose_name = 'Pricing Estimate'
+        verbose_name_plural = 'Pricing Estimates'
+        ordering = ['-submitted_on']

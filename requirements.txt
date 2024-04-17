@@ -10,3 +10,4 @@ sqlparse
 tzdata
 django-cors-headers
 django-jazzmin  
+Pillow
