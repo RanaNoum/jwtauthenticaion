@@ -233,3 +233,11 @@ class PricingEstimateSerializer(serializers.ModelSerializer):
     class Meta:
         model = PricingEstimate
         fields = '__all__'
+
+
+from .models import Update
+
+class UpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Update
+        fields = '__all__'

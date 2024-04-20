@@ -1,3 +1,6 @@
+# urls.py (development only)
+from django.conf import settings
+from django.conf.urls.static import static
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import (
@@ -19,6 +22,7 @@ from .views import (
     EventViewSet,
     CaseViewSet,
     CareerViewSet,
+    UpdateViewSet,
     PricingEstimateViewSet,
     UserPasswordResetView,
 )
@@ -29,6 +33,7 @@ router.register(r'categories', CategoryViewSet, basename='categorie')
 router.register(r'events', EventViewSet, basename='event')
 router.register(r'cases', CaseViewSet, basename='case')
 router.register(r'careers', CareerViewSet, basename='career')
+router.register(r'updates', UpdateViewSet)
 router.register(r'pricing', PricingEstimateViewSet, basename='pricing')
 router.register(r'technologies', TechnologyViewSet, basename='technologie')
 router.register(r'testimonials', TestimonialViewSet, basename='testimonial')
@@ -47,6 +52,7 @@ urlpatterns = [
     path('api/categories/<int:pk>/', CategoryViewSet.as_view({'get': 'retrieve'}), name='category-detail'),
     path('api/events/<int:pk>/', EventViewSet.as_view({'get': 'retrieve'}), name='event-detail'),
     path('api/cases/<int:pk>/', CaseViewSet.as_view({'get': 'retrieve'}), name='case-detail'),
+    path('api/updates/<int:pk>/', UpdateViewSet.as_view({'get': 'retrieve'}), name='update-detail'),
     path('api/careers/<int:pk>/', CareerViewSet.as_view({'get': 'retrieve'}), name='career-detail'),
     path('api/pricing-estimates/<int:pk>/', PricingEstimateViewSet.as_view({'get': 'retrieve'}), name='pricing-detail'),
     path('api/technologies/<int:pk>/', TechnologyViewSet.as_view({'get': 'retrieve'}), name='technology-detail'),
@@ -65,5 +71,5 @@ urlpatterns = [
     path('send-reset-password-email/', SendPasswordResetEmailView.as_view(), name='send-reset-password-email'),
     path('reset-password/<uid>/<token>/', UserPasswordResetView.as_view(), name='reset-password'),
     
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

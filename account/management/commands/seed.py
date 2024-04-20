@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 from django.contrib.auth import get_user_model
-from account.models import Category, Technology
+from account.models import Categorie, Technologie
 # seed.py
 from django.core.management.base import BaseCommand
 from django.contrib.auth import get_user_model
@@ -27,11 +27,11 @@ class Command(BaseCommand):
         
         categories = ['Category 1', 'Category 2', 'Category 3']
         for category_name in categories:
-            Category.objects.get_or_create(name=category_name)
+            Categorie.objects.get_or_create(name=category_name)
         self.stdout.write(self.style.SUCCESS(f'Successfully added {len(categories)} categories'))
 
         # Seed Technology data
         technologies = ['Technology 1', 'Technology 2', 'Technology 3']
         for tech_name in technologies:
-            Technology.objects.get_or_create(name=tech_name, description=f"{tech_name} description")
+            Technologie.objects.get_or_create(name=tech_name, description=f"{tech_name} description")
         self.stdout.write(self.style.SUCCESS(f'Successfully added {len(technologies)} technologies'))

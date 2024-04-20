@@ -1,7 +1,7 @@
 from django.contrib import admin
 from account.models import User
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .models import Categorie, Event, Case, Career, Technologie, Testimonial, Project, Service, BlogPost, Comment, CompanyInformation, TeamMember, Author, ContactInquirie, PricingEstimate
+from .models import Categorie, Event, Case, Career, Technologie, Update, Testimonial, Project, Service, BlogPost, Comment, CompanyInformation, TeamMember, Author, ContactInquirie, PricingEstimate
 
 
 class UserModelAdmin(BaseUserAdmin):
@@ -77,12 +77,12 @@ class ProjectAdmin(admin.ModelAdmin):
 
 @admin.register(Service)
 class ServiceAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'description', 'icon_image', 'related_projects')
+    list_display = ('id', 'name', 'description', 'image', 'related_projects')
     # filter_horizontal = ['related_projects']  # Allows selection of multiple projects.
 
 @admin.register(BlogPost)
 class BlogPostAdmin(admin.ModelAdmin):
-    list_display = ['id', 'title', 'content', 'category', 'published_date', 'user']
+    list_display = ['id', 'title', 'content', 'category', 'published_date', 'user', 'image']
     list_filter = ['category', 'user']
     search_fields = ['title', 'content']
 
@@ -119,3 +119,11 @@ class PricingEstimateAdmin(admin.ModelAdmin):
     list_filter = ['service_type', 'complexity', 'status', 'submitted_on']
     search_fields = ['client_information', 'feature_set']
     date_hierarchy = 'submitted_on'
+
+
+
+@admin.register(Update)
+class UpdateAdmin(admin.ModelAdmin):
+    list_display = ['title', 'content','category', 'image']
+    search_fields = ['title', 'content']
+    list_filter = ['category']

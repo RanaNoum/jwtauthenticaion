@@ -161,7 +161,7 @@ class Project(models.Model):
 class Service(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
-    icon_image = models.URLField()
+    image = models.ImageField(upload_to='Service_images/', blank=True, null=True)  # New ImageField
     related_projects = models.ForeignKey(Project, on_delete=models.CASCADE)
 
 
@@ -171,6 +171,7 @@ class BlogPost(models.Model):
     category = models.ForeignKey(Categorie, on_delete=models.CASCADE)
     published_date = models.DateTimeField()
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='user_blogposts')
+    image = models.ImageField(upload_to='blog_images/', blank=True, null=True)  # New ImageField
 
     def __str__(self):
         return self.title
@@ -254,7 +255,6 @@ class Case(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)
     due_date = models.DateTimeField(null=True, blank=True)
-    resolution = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return f"{self.case_number} - {self.title}"
@@ -328,3 +328,14 @@ class PricingEstimate(models.Model):
         verbose_name = 'Pricing Estimate'
         verbose_name_plural = 'Pricing Estimates'
         ordering = ['-submitted_on']
+
+
+
+class Update(models.Model):
+    title = models.CharField(max_length=255)
+    content = models.TextField()
+    image = models.ImageField(upload_to='updates/', blank=True, null=True)
+    category = models.TextField(max_length=255)
+
+    def __str__(self):
+        return self.title
