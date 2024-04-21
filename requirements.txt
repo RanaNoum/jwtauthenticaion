@@ -11,3 +11,4 @@ tzdata
 django-cors-headers
 django-jazzmin  
 Pillow
+pycountry
