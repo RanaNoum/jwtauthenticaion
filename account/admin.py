@@ -52,7 +52,7 @@ class CareerAdmin(admin.ModelAdmin):
 
 @admin.register(Case)
 class CaseAdmin(admin.ModelAdmin):
-    list_display = ('case_number', 'title', 'status', 'priority', 'assigned_to', 'created_by', 'created_date')
+    list_display = ('case_number', 'title', 'technologies', 'country', 'status', 'priority', 'assigned_to', 'created_by', 'service_type','created_date')
     list_filter = ('status', 'priority', 'created_date')
     search_fields = ('title', 'description', 'case_number')
     date_hierarchy = 'created_date'
@@ -64,7 +64,7 @@ class TechnologyAdmin(admin.ModelAdmin):
 
 @admin.register(Testimonial)
 class TestimonialAdmin(admin.ModelAdmin):
-    list_display = ('id', 'client_name', 'client_company', 'content', 'project')
+    list_display = ('id', 'client_name', 'client_company', 'rating', 'image', 'content', 'project')
 
 
 @admin.register(Project)

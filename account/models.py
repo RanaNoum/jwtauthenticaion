@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager,AbstractBaseUser, PermissionsMixin
-from enum import Enum
+import pycountry
 from django.conf import settings  # Import settings to reference the AUTH_USER_MODEL
 
 
@@ -129,9 +129,18 @@ class Technologie(models.Model):
     description = models.TextField()
     technology_used=models.TextField()
 
+class RatingChoices(models.IntegerChoices):
+    ONE = 1, '1'
+    TWO = 2, '2'
+    THREE = 3, '3'
+    FOUR = 4, '4'
+    FIVE = 5, '5'
+
 class Testimonial(models.Model):
     client_name = models.CharField(max_length=100)
     client_company = models.CharField(max_length=100)
+    rating = models.IntegerField(choices=RatingChoices.choices)
+    image = models.ImageField(upload_to='testimonial_images/', blank=True, null=True)
     content = models.TextField()
     project = models.ForeignKey('Project', on_delete=models.CASCADE)
 
@@ -232,12 +241,19 @@ class ContactInquirie(models.Model):
 
 
 
+COUNTRY_CHOICES = [(country.alpha_2, country.name) for country in pycountry.countries]
+
 class Case(models.Model):
     STATUS_CHOICES = [
         ('open', 'Open'),
         ('in_progress', 'In Progress'),
         ('closed', 'Closed'),
         ('on_hold', 'On Hold')
+    ]
+    SERVICE_TYPE_CHOICES = [
+        ('web', 'Web Development'),
+        ('mobile', 'Mobile App Development'),
+        ('software', 'Software Development'),
     ]
     PRIORITY_CHOICES = [
         ('high', 'High'),
@@ -247,6 +263,10 @@ class Case(models.Model):
 
     title = models.CharField(max_length=255)
     description = models.TextField()
+    service_type = models.CharField(max_length=100, choices=SERVICE_TYPE_CHOICES)
+    technologies = models.ForeignKey(Technologie, on_delete=models.CASCADE)
+    country = models.CharField(max_length=2, choices=COUNTRY_CHOICES, blank=True, null=True)
+    country_image = models.ImageField(upload_to='case/', blank=True, null=True)
     case_number = models.CharField(max_length=120, unique=True)
     status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='open')
     priority = models.CharField(max_length=50, choices=PRIORITY_CHOICES, default='medium')
