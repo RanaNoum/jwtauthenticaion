@@ -1,8 +1,6 @@
 from django.contrib.auth import login, logout, authenticate
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from rest_framework.response import Response
-from rest_framework import status
 from rest_framework.views import APIView
 from account.serializers import SendPasswordResetEmailSerializer, UserChangePasswordSerializer, UserLoginSerializer, UserPasswordResetSerializer, UserProfileSerializer, UserRegistrationSerializer
 from django.contrib.auth import authenticate
@@ -22,7 +20,10 @@ from rest_framework import viewsets
 from .models import Categorie, Technologie, Case, Career, Update, PricingEstimate, Testimonial, Project, Service, BlogPost, Comment, CompanyInformation, TeamMember, Author, ContactInquirie, Event
 from .serializers import CategorySerializer, UpdateSerializer, TechnologySerializer, CaseSerializer, CareerSerializer, PricingEstimateSerializer, TestimonialSerializer, ProjectSerializer, EventSerializer, ServiceSerializer, BlogPostSerializer, CommentSerializer, CompanyInformationSerializer, TeamMemberSerializer, AuthorSerializer, ContactInquirySerializer
 from .permissions import IsGetRequestOrAdmin
-
+from django.contrib.auth import authenticate
+from rest_framework import views, status
+from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import RefreshToken
 
 # Generate Token Manually
 def get_tokens_for_user(user):
@@ -31,6 +32,22 @@ def get_tokens_for_user(user):
         'refresh': str(refresh),
         'access': str(refresh.access_token),
     }
+
+
+
+# class CustomTokenObtainPairView(views.APIView):
+#     def post(self, request, *args, **kwargs):
+#         username = request.data.get("username", "")
+#         password = request.data.get("password", "")
+#         user = authenticate(request, username=username, password=password)
+#         if user is not None:
+#             refresh = RefreshToken.for_user(user)
+#             return Response({
+#                 'refresh': str(refresh),
+#                 'access': str(refresh.access_token),
+#             })
+#         return Response(status=status.HTTP_401_UNAUTHORIZED)
+
 
 class UserRegistrationView(APIView):
     renderer_classes = [UserRenderer]
@@ -184,3 +201,107 @@ class UpdateViewSet(viewsets.ModelViewSet):
     queryset = Update.objects.all()
     serializer_class = UpdateSerializer
     permission_classes = [IsGetRequestOrAdmin]  # Apply the custom permission
+
+
+
+# class AdminCreateAPIView(views.APIView):
+#     permission_classes = [AllowAny]  # Consider tightening this to more secure permissions
+
+#     def post(self, request):
+#         username = request.data.get("username")
+#         password = request.data.get("password")
+#         email = request.data.get("email")
+#         if not all([username, email, password]):
+#             return Response({"error": "All fields are required."}, status=status.HTTP_400_BAD_REQUEST)
+
+#         if User.objects.filter(username=username).exists():
+#             return Response({"error": "This username is already taken."}, status=status.HTTP_409_CONFLICT)
+
+#         user = User.objects.create_superuser(username=username, email=email, password=password)
+#         return Response({"success": f"Admin user {username} created successfully."}, status=status.HTTP_201_CREATED)
+
+# from django.contrib.auth import get_user_model
+# from rest_framework import views, status
+# from rest_framework.response import Response
+# from rest_framework.permissions import AllowAny
+
+# User = get_user_model()
+
+# class AdminCreateAPIView(views.APIView):
+#     permission_classes = [AllowAny]  # Consider using more restrictive permissions in production
+
+#     def post(self, request):
+#         email = request.data.get("email")
+#         password = request.data.get("password")
+#         name = request.data.get("name")  # Assuming 'name' might also be used as a display name
+
+#         if not all([email, password]):
+#             return Response({"error": "Email and password are required."}, status=status.HTTP_400_BAD_REQUEST)
+
+#         if User.objects.filter(email=email).exists():
+#             return Response({"error": "This email is already used."}, status=status.HTTP_409_CONFLICT)
+
+#         user = User.objects.create_superuser(email=email, password=password, name=name)  # Ensure your create_superuser method supports these fields
+#         return Response({"success": f"Admin user with email {email} created successfully."}, status=status.HTTP_201_CREATED)
+
+
+# class AdminCreateAPIView(views.APIView):
+#     permission_classes = [AllowAny]  # Ensure you have the appropriate permissions in production
+
+#     def post(self, request):
+#         email = request.data.get("email")
+#         password = request.data.get("password")
+#         name = request.data.get("name")  # Assuming 'name' is also a required field
+#         tc = request.data.get("tc")  # Retrieve the tc value from request data
+
+#         if not all([email, password, tc]):
+#             return Response({"error": "Email, password, and tc are required."}, status=status.HTTP_400_BAD_REQUEST)
+
+#         if User.objects.filter(email=email).exists():
+#             return Response({"error": "This email is already used."}, status=status.HTTP_409_CONFLICT)
+
+#         user = User.objects.create_superuser(email=email, password=password, name=name, tc=tc)  # Pass the tc field here
+#         return Response({"success": f"Admin user {email} created successfully."}, status=status.HTTP_201_CREATED)
+
+
+
+
+# from rest_framework.permissions import IsAdminUser
+# User = get_user_model()
+
+# class AdminChangePasswordAPIView(views.APIView):
+#     permission_classes = [IsAdminUser]
+
+#     def post(self, request):
+#         username = request.data.get("username")
+#         new_password = request.data.get("new_password")
+#         if not all([username, new_password]):
+#             return Response({"error": "Both username and new password are required."}, status=status.HTTP_400_BAD_REQUEST)
+
+#         try:
+#             user = User.objects.get(username=username)
+#             user.set_password(new_password)
+#             user.save()
+#             return Response({"success": "Password updated successfully."}, status=status.HTTP_200_OK)
+#         except User.DoesNotExist:
+#             return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+
+
+# class AdminChangePasswordAPIView(views.APIView):
+#     # permission_classes = [IsAdminUser]
+#     permission_classes = [AllowAny]  # Not recommended for sensitive operations
+
+#     def post(self, request):
+#         email = request.data.get("email")
+#         new_password = request.data.get("new_password")
+
+#         if not all([email, new_password]):
+#             return Response({"error": "Email and new password are required."}, status=status.HTTP_400_BAD_REQUEST)
+
+#         try:
+#             user = User.objects.get(email=email)  # Use email to identify the user
+#             user.set_password(new_password)
+#             user.save()
+#             return Response({"success": "Password updated successfully for email: " + email}, status=status.HTTP_200_OK)
+#         except User.DoesNotExist:
+#             return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)

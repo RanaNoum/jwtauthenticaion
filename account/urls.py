@@ -2,6 +2,12 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path, include
+
+# from rest_framework_simplejwt.views import (
+#     TokenObtainPairView,
+#     TokenRefreshView,
+# )
+# from .views import admin_change_password
 from rest_framework.routers import DefaultRouter
 from .views import (
     CategoryViewSet,
@@ -25,6 +31,9 @@ from .views import (
     UpdateViewSet,
     PricingEstimateViewSet,
     UserPasswordResetView,
+    # CustomTokenObtainPairView,
+    # AdminCreateAPIView,
+    # AdminChangePasswordAPIView,
 )
 app_name = 'account'
 
@@ -70,6 +79,11 @@ urlpatterns = [
     path('changepassword/', UserChangePasswordView.as_view(), name='changepassword'),
     path('send-reset-password-email/', SendPasswordResetEmailView.as_view(), name='send-reset-password-email'),
     path('reset-password/<uid>/<token>/', UserPasswordResetView.as_view(), name='reset-password'),
+    # path('api/custom-token/', CustomTokenObtainPairView.as_view(), name='custom_token_obtain_pair'),
+    # path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    # path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    # path('api/admin/create/', AdminCreateAPIView.as_view(), name='admin-create'),
+    # path('api/admin/change-password/', AdminChangePasswordAPIView.as_view(), name='admin-change-password'),
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
