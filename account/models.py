@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import BaseUserManager,AbstractBaseUser, PermissionsMixin
 import pycountry
 from django.conf import settings  # Import settings to reference the AUTH_USER_MODEL
-
+from tinymce.models import HTMLField
 
 
 
@@ -176,6 +176,8 @@ class Service(models.Model):
 
 class BlogPost(models.Model):
     title = models.CharField(max_length=255)
+    # heading = models.CharField()
+    heading = HTMLField('Heading_Content',blank=True)  # Replaces models.TextField()
     content = models.TextField()
     category = models.ForeignKey(Categorie, on_delete=models.CASCADE)
     published_date = models.DateTimeField()
@@ -218,7 +220,7 @@ class Author(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     username = models.CharField(max_length=100)
     email = models.EmailField()
-
+    Author_image = models.ImageField(upload_to='Auther_images/', blank=True, null=True)  # New ImageField
     roles = models.CharField(max_length=50, choices=RoleChoices.choices, default=RoleChoices.CONTRIBUTOR)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

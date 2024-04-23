@@ -2,6 +2,9 @@ from django.contrib import admin
 from account.models import User
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from .models import Categorie, Event, Case, Career, Technologie, Update, Testimonial, Project, Service, BlogPost, Comment, CompanyInformation, TeamMember, Author, ContactInquirie, PricingEstimate
+from .forms import BlogPostForm
+from tinymce.widgets import TinyMCE
+from django.db import models  # This import is necessary for models.TextField
 
 
 class UserModelAdmin(BaseUserAdmin):
@@ -80,12 +83,36 @@ class ServiceAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'description', 'image', 'related_projects')
     # filter_horizontal = ['related_projects']  # Allows selection of multiple projects.
 
+
+
+
+   
 @admin.register(BlogPost)
 class BlogPostAdmin(admin.ModelAdmin):
-    list_display = ['id', 'title', 'content', 'category', 'published_date', 'user', 'image']
-    list_filter = ['category', 'user']
-    search_fields = ['title', 'content']
+    form = BlogPostForm
+    formfield_overrides = {
+        models.TextField: {'widget': TinyMCE(attrs={'cols': 80, 'rows': 30})},
+    }
+    
+    list_display = ('id', 'title', 'get_content', 'category', 'published_date', 'user', 'image')
+    list_filter = ('category', 'user')
+    search_fields = ('title', 'content')
 
+    def get_content(self, obj):
+        return obj.content[:60] + '...' if len(obj.heading) > 60 else obj.heading
+    get_content.short_description = 'Content'
+
+
+
+# @admin.register(BlogPost)
+# class BlogPostAdmin(admin.ModelAdmin):
+#      formfield_overrides = {
+#         models.TextField: {'widget': TinyMCE()},
+#     }
+#     list_display = ['id', 'title', 'content', 'category', 'published_date', 'user', 'image']
+#     list_filter = ['category', 'user']
+#     search_fields = ['title', 'content']
+# admin.site.register(BlogPost, BlogPostAdmin)
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
@@ -102,7 +129,7 @@ class TeamMemberAdmin(admin.ModelAdmin):
 
 @admin.register(Author)
 class AuthorAdmin(admin.ModelAdmin):
-    list_display = ['user', 'username', 'email', 'roles', 'created_at', 'updated_at']
+    list_display = ['user', 'username', 'email', 'Author_image', 'roles', 'created_at', 'updated_at']
     search_fields = ['username', 'email']
 
 
