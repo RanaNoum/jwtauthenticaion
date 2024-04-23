@@ -5,6 +5,8 @@ from .models import Categorie, Event, Case, Career, Technologie, Update, Testimo
 from .forms import BlogPostForm
 from tinymce.widgets import TinyMCE
 from django.db import models  # This import is necessary for models.TextField
+from .models import QuestionsAnswer
+admin.site.register(QuestionsAnswer)
 
 
 class UserModelAdmin(BaseUserAdmin):

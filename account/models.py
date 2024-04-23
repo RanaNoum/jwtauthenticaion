@@ -3,7 +3,8 @@ from django.contrib.auth.models import BaseUserManager,AbstractBaseUser, Permiss
 import pycountry
 from django.conf import settings  # Import settings to reference the AUTH_USER_MODEL
 from tinymce.models import HTMLField
-
+from django.db.models.signals import post_migrate
+from django.dispatch import receiver
 
 
 
@@ -206,7 +207,7 @@ class TeamMember(models.Model):
     name = models.CharField(max_length=100)
     role = models.CharField(max_length=100)
     bio = models.TextField()
-    image = models.URLField()
+    image = models.ImageField(upload_to='team_member_images/', blank=True, null=True)  # New ImageField
     social_media_links = models.CharField(max_length=255)
 
 class RoleChoices(models.TextChoices):
@@ -361,3 +362,43 @@ class Update(models.Model):
 
     def __str__(self):
         return self.title
+    
+
+class QuestionsAnswer(models.Model):
+    Question = models.TextField(verbose_name="Question")
+    Answer = models.TextField(verbose_name="Answer")
+
+    def __str__(self):
+        return f"Question: {self.Question} | Answer: {self.Answer}"
+    
+
+# Predefined QnA data
+DEFAULT_QNA_DATA = [
+    {
+        "Question": "What services do you offer?",
+        "Answer": "We offer a variety of services including web development, app development, and digital marketing."
+    },
+    {
+        "Question": "How can I contact customer support?",
+        "Answer": "You can reach our customer support at support@example.com."
+    },
+    {
+        "Question": "Where is your company located?",
+        "Answer": "Our main office is located in New York City."
+    },
+    {
+        "Question": "Do you offer international shipping?",
+        "Answer": "Yes, we offer shipping to numerous countries around the globe."
+    },
+    {
+        "Question": "What are your operating hours?",
+        "Answer": "We operate from 9 AM to 5 PM on weekdays."
+    }
+]
+
+@receiver(post_migrate)
+def populate_qna(sender, **kwargs):
+    if sender.name == 'account':  # Replace 'your_app_name' with the name of your app
+        for item in DEFAULT_QNA_DATA:
+            QuestionsAnswer.objects.get_or_create(Question=item["Question"], defaults={'Answer': item["Answer"]})
+
