@@ -2,6 +2,7 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path, include
+# from .views import pricing_estimate_view
 # from .views import send_test_email
 # from .views import PricingEstimateCreateView
 # from rest_framework_simplejwt.views import (
@@ -99,6 +100,8 @@ urlpatterns = [
     # path('api/admin/change-password/', AdminChangePasswordAPIView.as_view(), name='admin-change-password'),
     # path('send-test-email/', send_test_email, name='send_test_email'),
     # path('pricing/estimate/create/', PricingEstimateCreateView.as_view(), name='create_pricing_estimate'),
-    
+    # path('submit-estimate/', pricing_estimate_view, name='submit_estimate'),
+
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
