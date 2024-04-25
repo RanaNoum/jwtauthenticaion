@@ -463,10 +463,15 @@ class PricingEstimate(models.Model):
 
 
 class Update(models.Model):
+    COMPLEXITY_CHOICES = [
+        ('expert', 'Expert'),
+        ('service', 'Service'),
+     
+    ]
     title = models.CharField(max_length=255)
     content = models.TextField()
     image = models.ImageField(upload_to='updates/', blank=True, null=True)
-    category = models.TextField(max_length=255)
+    category = models.TextField(max_length=255, choices = COMPLEXITY_CHOICES)
 
     def __str__(self):
         return self.title
