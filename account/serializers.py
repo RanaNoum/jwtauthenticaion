@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Project, Service, BlogPost, Event, Case, Career, PricingEstimate, Categorie, Technologie, Testimonial, Comment, CompanyInformation, TeamMember, Author, ContactInquirie
+from .models import Project, Service, BlogPost, Event, Case, Career, PricingEstimate, QuestionsAnswer, Categorie, Technologie, Industrie, Testimonial, Comment, CompanyInformation, TeamMember, Author, ContactInquirie
 from rest_framework import serializers
 from account.models import User
 from django.utils.encoding import smart_str, force_bytes, DjangoUnicodeDecodeError
@@ -168,6 +168,14 @@ class TechnologySerializer(serializers.ModelSerializer):
         model = Technologie
         fields = '__all__'
 
+
+class IndustrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Industrie
+        fields = '__all__'
+
+
+
 class TestimonialSerializer(serializers.ModelSerializer):
     class Meta:
         model = Testimonial
@@ -241,3 +249,10 @@ class UpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Update
         fields = '__all__'
+
+
+
+class QuestionsAnswerSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = QuestionsAnswer
+    fields = ('id', 'Question', 'Answer')  # Fields to include in the serialized data

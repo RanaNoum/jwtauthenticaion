@@ -17,8 +17,8 @@ from .models import Project, Service, BlogPost, CompanyInformation, ContactInqui
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.admin.views.decorators import staff_member_required
 from rest_framework import viewsets
-from .models import Categorie, Technologie, Case, Career, Update, PricingEstimate, Testimonial, Project, Service, BlogPost, Comment, CompanyInformation, TeamMember, Author, ContactInquirie, Event
-from .serializers import CategorySerializer, UpdateSerializer, TechnologySerializer, CaseSerializer, CareerSerializer, PricingEstimateSerializer, TestimonialSerializer, ProjectSerializer, EventSerializer, ServiceSerializer, BlogPostSerializer, CommentSerializer, CompanyInformationSerializer, TeamMemberSerializer, AuthorSerializer, ContactInquirySerializer
+from .models import Categorie, Technologie, QuestionsAnswer, Industrie, Case, Career, Update, PricingEstimate, Testimonial, Project, Service, BlogPost, Comment, CompanyInformation, TeamMember, Author, ContactInquirie, Event
+from .serializers import CategorySerializer, UpdateSerializer, TechnologySerializer, IndustrySerializer, CaseSerializer, CareerSerializer, PricingEstimateSerializer, TestimonialSerializer, ProjectSerializer, EventSerializer, ServiceSerializer, BlogPostSerializer, CommentSerializer, CompanyInformationSerializer, TeamMemberSerializer, AuthorSerializer, ContactInquirySerializer, QuestionsAnswerSerializer
 from .permissions import IsGetRequestOrAdmin
 from django.contrib.auth import authenticate
 from rest_framework import views, status
@@ -114,6 +114,11 @@ class TechnologyViewSet(viewsets.ModelViewSet):
     serializer_class = TechnologySerializer
     permission_classes = [IsGetRequestOrAdmin]  # Apply the custom permission
 
+class IndustryViewSet(viewsets.ModelViewSet):
+    queryset = Industrie.objects.all()
+    serializer_class = IndustrySerializer
+    permission_classes = [IsGetRequestOrAdmin]  # Apply the custom permission
+
 class TestimonialViewSet(viewsets.ModelViewSet):
     queryset = Testimonial.objects.all()
     serializer_class = TestimonialSerializer
@@ -201,6 +206,12 @@ class UpdateViewSet(viewsets.ModelViewSet):
     queryset = Update.objects.all()
     serializer_class = UpdateSerializer
     permission_classes = [IsGetRequestOrAdmin]  # Apply the custom permission
+
+
+class QuestionsAnswerViewSet(viewsets.ModelViewSet):
+  queryset = QuestionsAnswer.objects.all()
+  serializer_class = QuestionsAnswerSerializer  # Use your created serializer
+  permission_classes = [IsGetRequestOrAdmin]  # Apply the custom permission
 
 
 
@@ -305,3 +316,56 @@ class UpdateViewSet(viewsets.ModelViewSet):
 #             return Response({"success": "Password updated successfully for email: " + email}, status=status.HTTP_200_OK)
 #         except User.DoesNotExist:
 #             return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+
+# views.py
+# from django.http import HttpResponse
+# from .utils import send_email_via_smtp
+
+# def send_test_email(request):
+#     send_email_via_smtp(
+#         '18251598-111@uog.edu.pk',
+#         'Test Email',
+#         'This is a test email from Django.'
+#     )
+#     return HttpResponse("Email sent successfully!")
+
+
+# from django.core.mail import EmailMessage, get_connection
+
+
+# from django.conf import settings
+
+# def send_email(request):  
+#    if request.method == "POST": 
+#        with get_connection(  
+#            host=settings.EMAIL_HOST, 
+#      port=settings.EMAIL_PORT,  
+#      username=settings.EMAIL_HOST_USER, 
+#      password=settings.EMAIL_HOST_PASSWORD, 
+#      use_tls=settings.EMAIL_USE_TLS  
+#        ) as connection:  
+#            subject = request.POST.get("subject")  
+#            email_from = settings.EMAIL_HOST_USER  
+#            recipient_list = [request.POST.get("email"), ]  
+#            message = request.POST.get("message")  
+#            EmailMessage(subject, message, email_from, recipient_list, connection=connection).send()  
+ 
+#    return render(request, 'home.html')
+
+
+
+# from django.core.mail import EmailMessage, get_connection
+# from django.core.mail import *
+# from django.views.generic.edit import CreateView
+# from django.urls import reverse_lazy
+# from .forms import PricingEstimateForm
+
+# class PricingEstimateCreateView(CreateView):
+#     model = PricingEstimate
+#     form_class = PricingEstimateForm
+#     template_name = 'pricing_estimate_form.html'  # Path to your template
+#     success_url = reverse_lazy('create_pricing_estimate')
+
+#     def form_valid(self, form):
+#         # Here you can add additional logic if needed before saving the form
+#         return super().form_valid(form)

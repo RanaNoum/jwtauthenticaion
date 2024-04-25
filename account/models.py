@@ -128,7 +128,11 @@ class Event(models.Model):
 class Technologie(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
-    technology_used=models.TextField()
+    
+
+class Industrie(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField()    
 
 class RatingChoices(models.IntegerChoices):
     ONE = 1, '1'
@@ -315,6 +319,57 @@ class Career(models.Model):
 
 
 
+# class PricingEstimate(models.Model):
+#     SERVICE_TYPE_CHOICES = [
+#         ('web', 'Web Development'),
+#         ('mobile', 'Mobile App Development'),
+#         ('software', 'Software Development'),
+#     ]
+#     COMPLEXITY_CHOICES = [
+#         ('low', 'Low'),
+#         ('medium', 'Medium'),
+#         ('high', 'High'),
+#     ]
+
+#     service_type = models.CharField(max_length=100, choices=SERVICE_TYPE_CHOICES)
+#     feature_set = models.TextField(help_text="Detailed description of the requested features")
+#     complexity = models.CharField(max_length=10, choices=COMPLEXITY_CHOICES)
+#     estimated_hours = models.DecimalField(max_digits=6, decimal_places=2, help_text="Estimated hours to complete the project")
+#     hourly_rate = models.DecimalField(max_digits=10, decimal_places=2, help_text="Hourly rate for the service")
+#     additional_costs = models.DecimalField(max_digits=10, decimal_places=2, default=0, help_text="Additional costs")
+#     discounts = models.DecimalField(max_digits=10, decimal_places=2, default=0, help_text="Discounts applied")
+#     total_estimated_cost = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, help_text="Automatically calculated total cost")
+#     contact_information = models.EmailField(max_length=255, verbose_name="Contact Information")
+#     submitted_on = models.DateTimeField(auto_now_add=True)
+#     status = models.CharField(max_length=100, default='pending', help_text="Status of the estimate")
+    
+#     # Add a file upload field
+#     file = models.FileField(upload_to='pricing_files/', blank=True, null=True)
+
+
+#     def save(self, *args, **kwargs):
+#         # Calculate total estimated cost
+#         self.total_estimated_cost = (self.estimated_hours * self.hourly_rate) + self.additional_costs - self.discounts
+#         super().save(*args, **kwargs)
+
+#     def __str__(self):
+#         return f"{self.service_type} for {self.client_information} on {self.submitted_on.strftime('%Y-%m-%d')}"
+
+#     class Meta:
+#         verbose_name = 'Pricing Estimate'
+#         verbose_name_plural = 'Pricing Estimates'
+#         ordering = ['-submitted_on']
+
+
+
+from django.db import models
+from django.core.mail import send_mail
+from django.conf import settings
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+
+
 class PricingEstimate(models.Model):
     SERVICE_TYPE_CHOICES = [
         ('web', 'Web Development'),
@@ -335,22 +390,75 @@ class PricingEstimate(models.Model):
     additional_costs = models.DecimalField(max_digits=10, decimal_places=2, default=0, help_text="Additional costs")
     discounts = models.DecimalField(max_digits=10, decimal_places=2, default=0, help_text="Discounts applied")
     total_estimated_cost = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, help_text="Automatically calculated total cost")
-    client_information = models.CharField(max_length=255, help_text="Information about the client")
+    contact_information = models.EmailField(max_length=255, verbose_name="Contact Information")
     submitted_on = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=100, default='pending', help_text="Status of the estimate")
-
-    def save(self, *args, **kwargs):
-        # Calculate total estimated cost
-        self.total_estimated_cost = (self.estimated_hours * self.hourly_rate) + self.additional_costs - self.discounts
-        super().save(*args, **kwargs)
+    
+    # Add a file upload field
+    file = models.FileField(upload_to='pricing_files/', blank=True, null=True)
 
     def __str__(self):
-        return f"{self.service_type} for {self.client_information} on {self.submitted_on.strftime('%Y-%m-%d')}"
+      return f"{self.service_type} - {self.total_estimated_cost}"
 
-    class Meta:
-        verbose_name = 'Pricing Estimate'
-        verbose_name_plural = 'Pricing Estimates'
-        ordering = ['-submitted_on']
+    def save(self, *args, **kwargs):
+        is_new = self.pk is None
+        super().save(*args, **kwargs)  # Call the "real" save() method.
+        if is_new:
+            send_mail(
+                'Pricing Estimate Created',
+                'Here is the message.',
+                '18251598-111@uog.edu.pk',
+                [self.contact_information],
+                fail_silently=False,
+            )
+
+
+    # def save(self, *args, **kwargs):
+    #     # Calculate total estimated cost
+    #     self.total_estimated_cost = (self.estimated_hours * self.hourly_rate) + self.additional_costs - self.discounts
+    #     super().save(*args, **kwargs)  # Call the real save() method
+
+    #     # Send email notification to admin
+    #     subject = "Pricing Estimate Submission"
+    #     message = (f"New Pricing Estimate Submitted:\n\n"
+    #                f"Service Type: {self.service_type}\n"
+    #                f"Features: {self.feature_set}\n"
+    #                f"Complexity: {self.complexity}\n"
+    #                f"Estimated Hours: {self.estimated_hours}\n"
+    #                f"Hourly Rate: {self.hourly_rate}\n"
+    #                f"Additional Costs: {self.additional_costs}\n"
+    #                f"Discounts: {self.discounts}\n"
+    #                f"Total Estimated Cost: {self.total_estimated_cost}\n"
+    #                f"Contact Information: {self.contact_information}\n"
+    #                f"Submitted On: {self.submitted_on.strftime('%Y-%m-%d %H:%M')}\n"
+    #                f"Status: {self.status}\n")
+    #     from_email = settings.EMAIL_HOST_USER
+    #     recipient_list = ['admin@example.com']  # Admin's email, adjust as necessary
+
+    #     send_mail(subject, message, from_email, recipient_list, fail_silently=False)
+
+    # def save(self, *args, **kwargs):
+    #     # Save the instance
+    #      super().save(*args, **kwargs)
+
+    #     # Send email
+    #      subject = 'New Pricing Estimate Received'
+    #      context = {
+    #         'service_type': self.service_type,
+    #         'feature_set': self.feature_set,
+    #         # Add more fields as needed
+    #     }
+    #      html_message = render_to_string('pricing_email.html', context)
+    #      plain_message = strip_tags(html_message)
+    #      from_email = '18251598-111@uog.edu.pk'  # Replace with your email
+    #      to_emails = ['admin@example.com']  # Replace with admin's email
+    #      send_mail(subject, plain_message, from_email, to_emails, html_message=html_message)
+ 
+
+
+
+
+
 
 
 

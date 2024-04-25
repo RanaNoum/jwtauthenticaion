@@ -2,6 +2,7 @@ asgiref
 Django
 django-cors-headers
 django-dotenv
+python-dotenv
 djangorestframework
 djangorestframework-simplejwt
 PyJWT

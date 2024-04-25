@@ -1,12 +1,12 @@
 from django.contrib import admin
 from account.models import User
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .models import Categorie, Event, Case, Career, Technologie, Update, Testimonial, Project, Service, BlogPost, Comment, CompanyInformation, TeamMember, Author, ContactInquirie, PricingEstimate
+from .models import Categorie, Event, Case, Career, Technologie, Industrie, Update, Testimonial, Project, Service, BlogPost, Comment, CompanyInformation, TeamMember, Author, ContactInquirie, PricingEstimate, QuestionsAnswer
 from .forms import BlogPostForm
 from tinymce.widgets import TinyMCE
 from django.db import models  # This import is necessary for models.TextField
-from .models import QuestionsAnswer
-admin.site.register(QuestionsAnswer)
+
+
 
 
 class UserModelAdmin(BaseUserAdmin):
@@ -65,7 +65,13 @@ class CaseAdmin(admin.ModelAdmin):
 
 @admin.register(Technologie)
 class TechnologyAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'description', 'technology_used')
+    list_display = ('id', 'name', 'description')
+
+
+@admin.register(Industrie)
+class IndustryAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'description')
+
 
 @admin.register(Testimonial)
 class TestimonialAdmin(admin.ModelAdmin):
@@ -106,16 +112,6 @@ class BlogPostAdmin(admin.ModelAdmin):
 
 
 
-# @admin.register(BlogPost)
-# class BlogPostAdmin(admin.ModelAdmin):
-#      formfield_overrides = {
-#         models.TextField: {'widget': TinyMCE()},
-#     }
-#     list_display = ['id', 'title', 'content', 'category', 'published_date', 'user', 'image']
-#     list_filter = ['category', 'user']
-#     search_fields = ['title', 'content']
-# admin.site.register(BlogPost, BlogPostAdmin)
-
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
     list_display = ('id', 'author_name', 'author_email', 'content', 'posted_date', 'post')
@@ -144,7 +140,7 @@ class ContactInquiryAdmin(admin.ModelAdmin):
 
 @admin.register(PricingEstimate)
 class PricingEstimateAdmin(admin.ModelAdmin):
-    list_display = ['service_type', 'client_information', 'submitted_on', 'total_estimated_cost', 'status']
+    list_display = ['service_type', 'contact_information', 'submitted_on', 'total_estimated_cost', 'status', 'file']
     list_filter = ['service_type', 'complexity', 'status', 'submitted_on']
     search_fields = ['client_information', 'feature_set']
     date_hierarchy = 'submitted_on'
@@ -156,3 +152,12 @@ class UpdateAdmin(admin.ModelAdmin):
     list_display = ['title', 'content','category', 'image']
     search_fields = ['title', 'content']
     list_filter = ['category']
+
+
+
+
+
+@admin.register(QuestionsAnswer)
+class QuestionsAnswerAdmin(admin.ModelAdmin):
+  list_display = ('Question', 'Answer')  # Fields to display in admin list view
+

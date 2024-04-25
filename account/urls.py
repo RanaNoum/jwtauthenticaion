@@ -2,7 +2,8 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path, include
-
+# from .views import send_test_email
+# from .views import PricingEstimateCreateView
 # from rest_framework_simplejwt.views import (
 #     TokenObtainPairView,
 #     TokenRefreshView,
@@ -31,9 +32,11 @@ from .views import (
     UpdateViewSet,
     PricingEstimateViewSet,
     UserPasswordResetView,
+    QuestionsAnswerViewSet,
     # CustomTokenObtainPairView,
     # AdminCreateAPIView,
     # AdminChangePasswordAPIView,
+    
 )
 app_name = 'account'
 
@@ -54,6 +57,7 @@ router.register(r'companyinformation', CompanyInformationViewSet, basename='comp
 router.register(r'teammembers', TeamMemberViewSet, basename='teammember')
 router.register(r'authors', AuthorViewSet, basename='author')
 router.register(r'contactinquiries', ContactInquiryViewSet, basename='contactinquirie')
+router.register(r'questionanswers', QuestionsAnswerViewSet, basename='questionanswer')  # New registration
 
 urlpatterns = [
     path('api/', include(router.urls)),  # Corrected path (empty string '')
@@ -73,6 +77,7 @@ urlpatterns = [
     path('api/teammembers/<int:pk>/', TeamMemberViewSet.as_view({'get': 'retrieve'}), name='teammember-detail'),
     path('api/authors/<int:pk>/', AuthorViewSet.as_view({'get': 'retrieve'}), name='author-detail'),
     path('api/contactinquiries/<int:pk>/', ContactInquiryViewSet.as_view({'get': 'retrieve'}), name='contactinquiry-detail'),
+    path('api/questionanswers/<int:pk>/', QuestionsAnswerViewSet.as_view({'get': 'retrieve'}), name='questionanswer-detail'),
     # path('register/', UserRegistrationView.as_view(), name='register'),
     path('login/', UserLoginView.as_view(), name='login'),
     path('profile/', UserProfileView.as_view(), name='profile'),
@@ -84,6 +89,8 @@ urlpatterns = [
     # path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     # path('api/admin/create/', AdminCreateAPIView.as_view(), name='admin-create'),
     # path('api/admin/change-password/', AdminChangePasswordAPIView.as_view(), name='admin-change-password'),
+    # path('send-test-email/', send_test_email, name='send_test_email'),
+    # path('pricing/estimate/create/', PricingEstimateCreateView.as_view(), name='create_pricing_estimate'),
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
