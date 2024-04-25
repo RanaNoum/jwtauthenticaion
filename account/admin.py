@@ -1,7 +1,7 @@
 from django.contrib import admin
 from account.models import User
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .models import Categorie, Event, Case, Career, Technologie, Industrie, Update, Testimonial, Project, Service, BlogPost, Comment, CompanyInformation, TeamMember, Author, ContactInquirie, PricingEstimate, QuestionsAnswer
+from .models import Categorie, Event, Case, Career, Technologie, Industrie, Update, Testimonial, Project, Service, BlogPost, Comment, CompanyInformation, TeamMember, Author, ContactInquirie, PricingEstimate, QuestionsAnswer, Companies_we_serve
 from .forms import BlogPostForm
 from tinymce.widgets import TinyMCE
 from django.db import models  # This import is necessary for models.TextField
@@ -161,3 +161,9 @@ class UpdateAdmin(admin.ModelAdmin):
 class QuestionsAnswerAdmin(admin.ModelAdmin):
   list_display = ('Question', 'Answer')  # Fields to display in admin list view
 
+
+
+@admin.register(Companies_we_serve)
+class CompaniesWeServeAdmin(admin.ModelAdmin):
+    list_display = ['name', 'technologies']
+    search_fields = ['name', 'technologies']

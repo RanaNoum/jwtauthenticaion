@@ -170,7 +170,7 @@ class Project(models.Model):
 
     @property
     def technology_used(self):
-        return self.technologies.technology_used
+        return self.technologies
 
 class Service(models.Model):
     name = models.CharField(max_length=255)
@@ -515,3 +515,17 @@ def populate_qna(sender, **kwargs):
         for item in DEFAULT_QNA_DATA:
             QuestionsAnswer.objects.get_or_create(Question=item["Question"], defaults={'Answer': item["Answer"]})
 
+
+
+
+
+
+class Companies_we_serve(models.Model):
+    name = models.CharField(max_length=255)
+    description = HTMLField('Write description here', blank=True)
+    features_overview = models.TextField()
+    image = models.ImageField(upload_to='Project_weServed_images/')
+    technologies = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
