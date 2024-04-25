@@ -33,6 +33,7 @@ from .views import (
     PricingEstimateViewSet,
     UserPasswordResetView,
     QuestionsAnswerViewSet,
+    IndustryViewSet,
     # CustomTokenObtainPairView,
     # AdminCreateAPIView,
     # AdminChangePasswordAPIView,
@@ -58,6 +59,9 @@ router.register(r'teammembers', TeamMemberViewSet, basename='teammember')
 router.register(r'authors', AuthorViewSet, basename='author')
 router.register(r'contactinquiries', ContactInquiryViewSet, basename='contactinquirie')
 router.register(r'questionanswers', QuestionsAnswerViewSet, basename='questionanswer')  # New registration
+router.register(r'industries', IndustryViewSet, basename = 'industrie')
+
+
 
 urlpatterns = [
     path('api/', include(router.urls)),  # Corrected path (empty string '')
@@ -78,6 +82,7 @@ urlpatterns = [
     path('api/authors/<int:pk>/', AuthorViewSet.as_view({'get': 'retrieve'}), name='author-detail'),
     path('api/contactinquiries/<int:pk>/', ContactInquiryViewSet.as_view({'get': 'retrieve'}), name='contactinquiry-detail'),
     path('api/questionanswers/<int:pk>/', QuestionsAnswerViewSet.as_view({'get': 'retrieve'}), name='questionanswer-detail'),
+    path('api/industries/<int:pk>/', IndustryViewSet.as_view({'get': 'retrieve'}), name='industry-details'),
     # path('register/', UserRegistrationView.as_view(), name='register'),
     path('login/', UserLoginView.as_view(), name='login'),
     path('profile/', UserProfileView.as_view(), name='profile'),
