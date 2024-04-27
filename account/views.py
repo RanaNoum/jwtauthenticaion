@@ -378,3 +378,28 @@ class CompaniesWeServeViewSet(viewsets.ModelViewSet):
 #     def form_valid(self, form):
 #         # Here you can add additional logic if needed before saving the form
 #         return super().form_valid(form)
+
+
+# from django.shortcuts import render
+# from django.core.mail import send_mail
+# from .forms import PricingEstimateForm  # Make sure to import the correct form
+
+# def pricing_estimate_view(request):
+#     if request.method == 'POST':
+#         form = PricingEstimateForm(request.POST)
+#         if form.is_valid():
+#             # Assuming the form saves the data to a model
+#             estimate = form.save()
+
+#             send_mail(
+#                 'New Pricing Estimate Submitted',
+#                 f'A new pricing estimate has been submitted by {estimate.contact_information}.',  # Adjust based on actual model fields
+#                 '18251598-111@uog.edu.pk',
+#                 ['noumanlatifm@gmail.com'],  # Adjust recipient as needed
+#                 fail_silently=False,
+#             )
+#             return render(request, 'estimate_success.html')
+#     else:
+#         form = PricingEstimateForm()
+
+#     return render(request, 'estimate.html', {'form': form})

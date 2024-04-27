@@ -57,7 +57,7 @@ class CareerAdmin(admin.ModelAdmin):
 
 @admin.register(Case)
 class CaseAdmin(admin.ModelAdmin):
-    list_display = ('case_number', 'title', 'technologies', 'country', 'status', 'priority', 'assigned_to', 'created_by', 'service_type','created_date')
+    list_display = ('case_number', 'title', 'featured_image', 'technologies', 'industries', 'country', 'status', 'priority', 'assigned_to', 'created_by', 'service_type','created_date')
     list_filter = ('status', 'priority', 'created_date')
     search_fields = ('title', 'description', 'case_number')
     date_hierarchy = 'created_date'
@@ -65,7 +65,7 @@ class CaseAdmin(admin.ModelAdmin):
 
 @admin.register(Technologie)
 class TechnologyAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'description')
+    list_display = ('id', 'name', 'image', 'description')
 
 
 @admin.register(Industrie)

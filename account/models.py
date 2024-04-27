@@ -127,6 +127,7 @@ class Event(models.Model):
 
 class Technologie(models.Model):
     name = models.CharField(max_length=100)
+    image = models.ImageField(upload_to='technology_images/', blank=True, null=True)  # New ImageField
     description = models.TextField()
     
 
@@ -270,7 +271,9 @@ class Case(models.Model):
 
     title = models.CharField(max_length=255)
     description = models.TextField()
+    featured_image = models.ImageField(upload_to='Casefeatured_images/', blank=True, null=True)
     service_type = models.CharField(max_length=100, choices=SERVICE_TYPE_CHOICES)
+    industries = models.ForeignKey(Industrie, on_delete=models.CASCADE)
     technologies = models.ForeignKey(Technologie, on_delete=models.CASCADE)
     country = models.CharField(max_length=2, choices=COUNTRY_CHOICES, blank=True, null=True)
     country_image = models.ImageField(upload_to='case/', blank=True, null=True)
