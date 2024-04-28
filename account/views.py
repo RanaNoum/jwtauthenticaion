@@ -17,8 +17,8 @@ from .models import Project, Service, BlogPost, CompanyInformation, ContactInqui
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.admin.views.decorators import staff_member_required
 from rest_framework import viewsets
-from .models import Categorie, Technologie, QuestionsAnswer, Industrie, Case, Career, Update, PricingEstimate, Testimonial, Project, Service, BlogPost, Comment, CompanyInformation, TeamMember, Author, ContactInquirie, Event, Companies_we_serve
-from .serializers import CategorySerializer, UpdateSerializer, TechnologySerializer, IndustrySerializer, CaseSerializer, CareerSerializer, PricingEstimateSerializer, TestimonialSerializer, ProjectSerializer, EventSerializer, ServiceSerializer, BlogPostSerializer, CommentSerializer, CompanyInformationSerializer, TeamMemberSerializer, AuthorSerializer, ContactInquirySerializer, QuestionsAnswerSerializer, CompaniesWeServeSerializer
+from .models import Categorie, Technologie, QuestionsAnswer, Industrie, Case, Career, Update, PricingEstimate, Testimonial, Project, Service, BlogPost, Comment, CompanyInformation, TeamMember, Author, ContactInquirie, Event, Industries_we_serve
+from .serializers import CategorySerializer, UpdateSerializer, TechnologySerializer, IndustrySerializer, CaseSerializer, CareerSerializer, PricingEstimateSerializer, TestimonialSerializer, ProjectSerializer, EventSerializer, ServiceSerializer, BlogPostSerializer, CommentSerializer, CompanyInformationSerializer, TeamMemberSerializer, AuthorSerializer, ContactInquirySerializer, QuestionsAnswerSerializer, IndustriesWeServeSerializer
 from .permissions import IsGetRequestOrAdmin
 from django.contrib.auth import authenticate
 from rest_framework import views, status
@@ -215,9 +215,9 @@ class QuestionsAnswerViewSet(viewsets.ModelViewSet):
 
 
 
-class CompaniesWeServeViewSet(viewsets.ModelViewSet):
-    queryset = Companies_we_serve.objects.all()
-    serializer_class = CompaniesWeServeSerializer
+class IndustriesWeServeViewSet(viewsets.ModelViewSet):
+    queryset = Industries_we_serve.objects.all()
+    serializer_class = IndustriesWeServeSerializer
     permission_classes = [IsGetRequestOrAdmin]  # Apply the custom permission
 
 
@@ -403,3 +403,14 @@ class CompaniesWeServeViewSet(viewsets.ModelViewSet):
 #         form = PricingEstimateForm()
 
 #     return render(request, 'estimate.html', {'form': form})
+
+
+# from django.shortcuts import redirect
+# from .models import PricingEstimate
+# from .utils import send_model_data_via_email
+
+# def send_model_data_view(request):
+#     my_instance = PricingEstimate.objects.get(id=1)
+#     send_model_data_via_email(my_instance)
+#     return redirect('success_page')
+

@@ -2,6 +2,7 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path, include
+# from . import views
 # from .views import pricing_estimate_view
 # from .views import send_test_email
 # from .views import PricingEstimateCreateView
@@ -35,7 +36,7 @@ from .views import (
     UserPasswordResetView,
     QuestionsAnswerViewSet,
     IndustryViewSet,
-    CompaniesWeServeViewSet,
+    IndustriesWeServeViewSet,
     # CustomTokenObtainPairView,
     # AdminCreateAPIView,
     # AdminChangePasswordAPIView,
@@ -62,7 +63,7 @@ router.register(r'authors', AuthorViewSet, basename='author')
 router.register(r'contactinquiries', ContactInquiryViewSet, basename='contactinquirie')
 router.register(r'questionanswers', QuestionsAnswerViewSet, basename='questionanswer')  # New registration
 router.register(r'industries', IndustryViewSet, basename = 'industrie')
-router.register(r'companies', CompaniesWeServeViewSet, basename='companies_we_server')
+router.register(r'companies', IndustriesWeServeViewSet, basename='companies_we_server')
 
 
 
@@ -86,7 +87,7 @@ urlpatterns = [
     path('api/contactinquiries/<int:pk>/', ContactInquiryViewSet.as_view({'get': 'retrieve'}), name='contactinquiry-detail'),
     path('api/questionanswers/<int:pk>/', QuestionsAnswerViewSet.as_view({'get': 'retrieve'}), name='questionanswer-detail'),
     path('api/industries/<int:pk>/', IndustryViewSet.as_view({'get': 'retrieve'}), name='industry-details'),
-    path('api/companies_we_server/<int:pk>', CompaniesWeServeViewSet.as_view({'get': 'retrieve'}), name='companies_we_served_all_details'),
+    path('api/companies_we_server/<int:pk>', IndustriesWeServeViewSet.as_view({'get': 'retrieve'}), name='companies_we_served_all_details'),
     # path('register/', UserRegistrationView.as_view(), name='register'),
     path('login/', UserLoginView.as_view(), name='login'),
     path('profile/', UserProfileView.as_view(), name='profile'),
@@ -98,9 +99,8 @@ urlpatterns = [
     # path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     # path('api/admin/create/', AdminCreateAPIView.as_view(), name='admin-create'),
     # path('api/admin/change-password/', AdminChangePasswordAPIView.as_view(), name='admin-change-password'),
-    # path('send-test-email/', send_test_email, name='send_test_email'),
-    # path('pricing/estimate/create/', PricingEstimateCreateView.as_view(), name='create_pricing_estimate'),
-    # path('submit-estimate/', pricing_estimate_view, name='submit_estimate'),
+
+
 
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

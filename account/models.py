@@ -133,6 +133,7 @@ class Technologie(models.Model):
 
 class Industrie(models.Model):
     name = models.CharField(max_length=100)
+    image = models.ImageField(upload_to='industry_images/', blank=True, null=True)  # New ImageField
     description = models.TextField()    
 
 class RatingChoices(models.IntegerChoices):
@@ -182,8 +183,8 @@ class Service(models.Model):
 
 class BlogPost(models.Model):
     title = models.CharField(max_length=255)
-    # heading = models.CharField()
-    heading = HTMLField('Heading_Content',blank=True)  # Replaces models.TextField()
+    heading = models.CharField(max_length=255)
+    # heading = models.TextField('Heading_Content',blank=True)  # Replaces models.TextField()
     content = models.TextField()
     category = models.ForeignKey(Categorie, on_delete=models.CASCADE)
     published_date = models.DateTimeField()
@@ -249,8 +250,50 @@ class ContactInquirie(models.Model):
 
 
 
-COUNTRY_CHOICES = [(country.alpha_2, country.name) for country in pycountry.countries]
 
+
+# class Case(models.Model):
+#     STATUS_CHOICES = [
+#         ('open', 'Open'),
+#         ('in_progress', 'In Progress'),
+#         ('closed', 'Closed'),
+#         ('on_hold', 'On Hold')
+#     ]
+#     SERVICE_TYPE_CHOICES = [
+#         ('web', 'Web Development'),
+#         ('mobile', 'Mobile App Development'),
+#         ('software', 'Software Development'),
+#     ]
+#     PRIORITY_CHOICES = [
+#         ('high', 'High'),
+#         ('medium', 'Medium'),
+#         ('low', 'Low')
+#     ]
+
+#     title = models.CharField(max_length=255)
+#     description = models.TextField()
+#     featured_image = models.ImageField(upload_to='Casefeatured_images/', blank=True, null=True)
+#     service_type = models.CharField(max_length=100, choices=SERVICE_TYPE_CHOICES)
+#     industries = models.ForeignKey(Industrie, on_delete=models.CASCADE)
+#     technologies = models.ForeignKey(Technologie, on_delete=models.CASCADE)
+#     country = models.CharField(max_length=2, choices=COUNTRY_CHOICES, blank=True, null=True)
+#     country_image = models.ImageField(upload_to='case/', blank=True, null=True)
+#     case_number = models.CharField(max_length=120, unique=True)
+#     status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='open')
+#     priority = models.CharField(max_length=50, choices=PRIORITY_CHOICES, default='medium')
+#     assigned_to = models.ForeignKey(User, related_name='assigned_cases', on_delete=models.SET_NULL, null=True)
+#     created_by = models.ForeignKey(User, related_name='created_cases', on_delete=models.CASCADE)
+#     created_date = models.DateTimeField(auto_now_add=True)
+#     modified_date = models.DateTimeField(auto_now=True)
+#     due_date = models.DateTimeField(null=True, blank=True)
+
+#     def __str__(self):
+#         return f"{self.case_number} - {self.title}"
+
+#     class Meta:
+#         ordering = ['-created_date']
+
+COUNTRY_CHOICES = [(country.alpha_2, country.name) for country in pycountry.countries]
 class Case(models.Model):
     STATUS_CHOICES = [
         ('open', 'Open'),
@@ -271,12 +314,12 @@ class Case(models.Model):
 
     title = models.CharField(max_length=255)
     description = models.TextField()
-    featured_image = models.ImageField(upload_to='Casefeatured_images/', blank=True, null=True)
+    featured_image = models.ImageField(upload_to='case_featured_images/', blank=True, null=True)
     service_type = models.CharField(max_length=100, choices=SERVICE_TYPE_CHOICES)
-    industries = models.ForeignKey(Industrie, on_delete=models.CASCADE)
-    technologies = models.ForeignKey(Technologie, on_delete=models.CASCADE)
+    industries = models.ManyToManyField(Industrie, blank=True)
+    technologies = models.ManyToManyField(Technologie, blank=True)
     country = models.CharField(max_length=2, choices=COUNTRY_CHOICES, blank=True, null=True)
-    country_image = models.ImageField(upload_to='case/', blank=True, null=True)
+    country_image = models.ImageField(upload_to='case_country_images/', blank=True, null=True)
     case_number = models.CharField(max_length=120, unique=True)
     status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='open')
     priority = models.CharField(max_length=50, choices=PRIORITY_CHOICES, default='medium')
@@ -291,7 +334,6 @@ class Case(models.Model):
 
     class Meta:
         ordering = ['-created_date']
-
 
 
 
@@ -403,17 +445,36 @@ class PricingEstimate(models.Model):
     def __str__(self):
       return f"{self.service_type} - {self.total_estimated_cost}"
 
-    def save(self, *args, **kwargs):
-        is_new = self.pk is None
-        super().save(*args, **kwargs)  # Call the "real" save() method.
-        if is_new:
-            send_mail(
-                'Pricing Estimate Created',
-                'Here is the message.',
-                '18251598-111@uog.edu.pk',
-                [self.contact_information],
-                fail_silently=False,
-            )
+    # def save(self, *args, **kwargs):
+    #     is_new = self.pk is None  # Check if the instance is new
+    #     super().save(*args, **kwargs)  # Call the real save() method
+    #     if is_new:  # Only send email if it's a new instance
+    #         subject = 'Thank you for your request'
+    #         message = f"Dear user, thank you for your request. Here are the details:\n\nService Type: {self.service_type}\nComplexity: {self.complexity}\nEstimated Hours: {self.estimated_hours}\nHourly Rate: {self.hourly_rate}\nAdditional Costs: {self.additional_costs}\nDiscounts: {self.discounts}\nTotal Estimated Cost: {self.total_estimated_cost}\n\nBest regards,\nYour Company Name"
+    #         send_mail(
+    #             subject,
+    #             message,
+    #             settings.EMAIL_HOST_USER,
+    #             [self.contact_information],
+    #             fail_silently=False,
+    #         )
+
+    # def __str__(self):
+    #     return f"{self.service_type} - {self.total_estimated_cost}"
+
+
+
+    # def save(self, *args, **kwargs):
+    #     is_new = self.pk is None
+    #     super().save(*args, **kwargs)  # Call the "real" save() method.
+    #     if is_new:
+    #         send_mail(
+    #             'Pricing Estimate Created',
+    #             'Here is the message.',
+    #             '18251598-111@uog.edu.pk',
+    #             [self.contact_information],
+    #             fail_silently=False,
+    #         )
 
 
     # def save(self, *args, **kwargs):
@@ -523,7 +584,7 @@ def populate_qna(sender, **kwargs):
 
 
 
-class Companies_we_serve(models.Model):
+class Industries_we_serve(models.Model):
     name = models.CharField(max_length=255)
     description = HTMLField('Write description here', blank=True)
     features_overview = models.TextField()
