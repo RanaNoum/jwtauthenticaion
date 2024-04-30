@@ -1,18 +1,18 @@
-from django.core.mail import EmailMessage
-from django.core.mail import send_mail
-from django.conf import settings
-import os
+# from django.core.mail import EmailMessage
+# from django.core.mail import send_mail
+# from django.conf import settings
+# import os
 
-class Util:
-  @staticmethod
-  def send_email(data):
-    email = EmailMessage(
-      subject=data['subject'],
-      body=data['body'],
-      from_email=os.environ.get('EMAIL_FROM'),
-      to=[data['noumanlatifm@gmail.com']]
-    )
-    email.send()
+# class Util:
+#   @staticmethod
+#   def send_email(data):
+#     email = EmailMessage(
+#       subject=data['subject'],
+#       body=data['body'],
+#       from_email=os.environ.get('EMAIL_FROM'),
+#       to=[data['noumanlatifm@gmail.com']]
+#     )
+#     email.send()
 
 # def send_model_data_via_email(model_instance):
 #     subject = PricingEstimate
