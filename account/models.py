@@ -313,12 +313,16 @@ class Case(models.Model):
     ]
 
     title = models.CharField(max_length=255)
-    description = models.TextField()
+    description = models.CharField(max_length=255)
+    # heading = models.TextField('Heading_Content',blank=True)  # Replaces models.TextField()
+    content = models.TextField()
+    # description = models.TextField(max_length=255)
+    # content = models.TextField()  # Adding the TinyMCE HTML field for rich text editing
     featured_image = models.ImageField(upload_to='case_featured_images/', blank=True, null=True)
-    service_type = models.CharField(max_length=100, choices=SERVICE_TYPE_CHOICES)
-    industries = models.ManyToManyField(Industrie, blank=True)
+    service_type = models.CharField(max_length=100, choices=SERVICE_TYPE_CHOICES,blank=True)
+    industries = models.ForeignKey(Industrie,related_name='industries', on_delete=models.CASCADE)
     technologies = models.ManyToManyField(Technologie, blank=True)
-    country = models.CharField(max_length=2, choices=COUNTRY_CHOICES, blank=True, null=True)
+    country = models.CharField(max_length=23, choices=COUNTRY_CHOICES, blank=True, null=True)
     country_image = models.ImageField(upload_to='case_country_images/', blank=True, null=True)
     case_number = models.CharField(max_length=120, unique=True)
     status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='open')
@@ -328,9 +332,6 @@ class Case(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)
     due_date = models.DateTimeField(null=True, blank=True)
-
-    def __str__(self):
-        return f"{self.case_number} - {self.title}"
 
     class Meta:
         ordering = ['-created_date']
