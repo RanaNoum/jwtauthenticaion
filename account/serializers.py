@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Project, Service, BlogPost, Event, Case, Career, PricingEstimate, QuestionsAnswer, Categorie, Technologie, Industrie, Testimonial, Comment, CompanyInformation, TeamMember, Author, ContactInquirie, Industries_we_serve
+from .models import Project, Service, BlogPost, Event, ServiceType,Case, Career, PricingEstimate, QuestionsAnswer, Categorie, Technologie, Industrie, Testimonial, Comment, CompanyInformation, TeamMember, Author, ContactInquirie, Industries_we_serve
 from rest_framework import serializers
 from account.models import User
 from django.utils.encoding import smart_str, force_bytes, DjangoUnicodeDecodeError
@@ -151,16 +151,10 @@ class EventSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class CaseSerializer(serializers.ModelSerializer):
+class ServiceTypeSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Case
+        model = ServiceType
         fields = '__all__'  # Serialize all fields from the Case model
-
-
-class CategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Categorie
-        fields = '__all__'
 
 
 class TechnologySerializer(serializers.ModelSerializer):
@@ -173,6 +167,25 @@ class IndustrySerializer(serializers.ModelSerializer):
     class Meta:
         model = Industrie
         fields = '__all__'
+
+
+
+class CaseSerializer(serializers.ModelSerializer):
+    industries = IndustrySerializer(read_only=True)
+    created_by = User
+    service_type = ServiceTypeSerializer(many=True, read_only=True)
+    technologies = TechnologySerializer(many=True, read_only=True)
+    class Meta:
+        model = Case
+        fields = '__all__'  # Serialize all fields from the Case model
+
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Categorie
+        fields = '__all__'
+
+
 
 
 

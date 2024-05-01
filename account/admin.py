@@ -1,7 +1,7 @@
 from django.contrib import admin
 from account.models import User
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .models import Categorie, Event, Case, Career, Technologie, Industrie, Update, Testimonial, Project, Service, BlogPost, Comment, CompanyInformation, TeamMember, Author, ContactInquirie, PricingEstimate, QuestionsAnswer, Industries_we_serve
+from .models import Categorie, Event,  ServiceType, Case, Career, Technologie, Industrie, Update, Testimonial, Project, Service, BlogPost, Comment, CompanyInformation, TeamMember, Author, ContactInquirie, PricingEstimate, QuestionsAnswer, Industries_we_serve
 from .forms import BlogPostForm
 from tinymce.widgets import TinyMCE
 from django.db import models  # This import is necessary for models.TextField
@@ -61,16 +61,26 @@ class CareerAdmin(admin.ModelAdmin):
 #     list_filter = ('status', 'priority', 'created_date')
 #     search_fields = ('title', 'description', 'case_number')
 #     date_hierarchy = 'created_date'
+@admin.register(ServiceType)
+class ServiceTypeAdmin(admin.ModelAdmin):
+    list_display = ['choice_name']
+    
+
 
 @admin.register(Case)
 class CaseAdmin(admin.ModelAdmin):
-    list_display = ('case_number', 'title', 'status', 'priority', 'get_industries', 'get_technologies', 'assigned_to', 'created_by')
-    search_fields = ('title', 'description', 'case_number')
-    list_filter = ('status', 'priority', 'created_by', 'assigned_to')
+    list_display = ('title', 'status', 'priority', 'get_service_type', 'industries', 'get_technologies', 'created_by')
+    search_fields = ('title', 'description')
+    list_filter = ('status', 'priority', 'created_by')
 
-    def get_industries(self, obj):
-        return ", ".join([industry.name for industry in obj.industries.all()])
-    get_industries.short_description = 'Industries'
+    # def get_industries(self, obj):
+    #     return ", ".join([industry.name for industry in obj.industries.all()])
+    # get_industries.short_description = 'Industries'
+
+    def get_service_type(self, obj):
+        return ", ".join([service_types.choice_name for service_types in obj.service_type.all()])
+    get_service_type.short_description = 'ServiceType'
+
 
     def get_technologies(self, obj):
         return ", ".join([technology.name for technology in obj.technologies.all()])
@@ -117,8 +127,8 @@ class BlogPostAdmin(admin.ModelAdmin):
         models.TextField: {'widget': TinyMCE(attrs={'cols': 80, 'rows': 30})},
     }
     
-    list_display = ('id', 'title', 'heading', 'category', 'published_date', 'user', 'image')
-    list_filter = ('category', 'user')
+    list_display = ('id', 'title', 'heading', 'category', 'published_date', 'author', 'image')
+    list_filter = ('category', 'author')
     search_fields = ('title', 'content')
 
     # def get_content(self, obj):
@@ -142,7 +152,7 @@ class TeamMemberAdmin(admin.ModelAdmin):
 
 @admin.register(Author)
 class AuthorAdmin(admin.ModelAdmin):
-    list_display = ['user', 'username', 'email', 'Author_image', 'roles', 'created_at', 'updated_at']
+    list_display = ['Select_author', 'username', 'email', 'Author_image', 'roles', 'created_at', 'updated_at']
     search_fields = ['username', 'email']
 
 

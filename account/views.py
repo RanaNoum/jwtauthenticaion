@@ -17,8 +17,8 @@ from .models import Project, Service, BlogPost, CompanyInformation, ContactInqui
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.admin.views.decorators import staff_member_required
 from rest_framework import viewsets
-from .models import Categorie, Technologie, QuestionsAnswer, Industrie, Case, Career, Update, PricingEstimate, Testimonial, Project, Service, BlogPost, Comment, CompanyInformation, TeamMember, Author, ContactInquirie, Event, Industries_we_serve
-from .serializers import CategorySerializer, UpdateSerializer, TechnologySerializer, IndustrySerializer, CaseSerializer, CareerSerializer, PricingEstimateSerializer, TestimonialSerializer, ProjectSerializer, EventSerializer, ServiceSerializer, BlogPostSerializer, CommentSerializer, CompanyInformationSerializer, TeamMemberSerializer, AuthorSerializer, ContactInquirySerializer, QuestionsAnswerSerializer, IndustriesWeServeSerializer
+from .models import Categorie, Technologie, QuestionsAnswer, Industrie, ServiceType,Case, Career, Update, PricingEstimate, Testimonial, Project, Service, BlogPost, Comment, CompanyInformation, TeamMember, Author, ContactInquirie, Event, Industries_we_serve
+from .serializers import CategorySerializer, UpdateSerializer, TechnologySerializer, IndustrySerializer,  ServiceTypeSerializer, CaseSerializer, CareerSerializer, PricingEstimateSerializer, TestimonialSerializer, ProjectSerializer, EventSerializer, ServiceSerializer, BlogPostSerializer, CommentSerializer, CompanyInformationSerializer, TeamMemberSerializer, AuthorSerializer, ContactInquirySerializer, QuestionsAnswerSerializer, IndustriesWeServeSerializer
 from .permissions import IsGetRequestOrAdmin
 from django.contrib.auth import authenticate
 from rest_framework import views, status
@@ -170,6 +170,11 @@ class EventViewSet(viewsets.ModelViewSet):
     serializer_class = EventSerializer
     permission_classes = [IsGetRequestOrAdmin]  # Apply the custom permission
 
+
+class ServicetypeViewSet(viewsets.ModelViewSet):
+    queryset = ServiceType.objects.all()
+    serializer_class = ServiceTypeSerializer
+    permission_classes = [IsGetRequestOrAdmin]  # Apply the custom permission
 
 
 class CaseViewSet(viewsets.ModelViewSet):

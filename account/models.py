@@ -180,6 +180,26 @@ class Service(models.Model):
     image = models.ImageField(upload_to='Service_images/', blank=True, null=True)  # New ImageField
     related_projects = models.ForeignKey(Project, on_delete=models.CASCADE)
 
+class RoleChoices(models.TextChoices):
+    ADMIN = 'Admin', 'Administrator'
+    EDITOR = 'Editor', 'Editor'
+    CONTRIBUTOR = 'Contributor', 'Contributor'
+    GUEST = 'Guest', 'Guest'
+
+
+class Author(models.Model):
+    Select_author = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    username = models.CharField(max_length=100)
+    email = models.EmailField()
+    Author_image = models.ImageField(upload_to='Auther_images/', blank=True, null=True)  # New ImageField
+    roles = models.CharField(max_length=50, choices=RoleChoices.choices, default=RoleChoices.CONTRIBUTOR)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.username
+
+
 
 class BlogPost(models.Model):
     title = models.CharField(max_length=255)
@@ -188,7 +208,7 @@ class BlogPost(models.Model):
     content = models.TextField()
     category = models.ForeignKey(Categorie, on_delete=models.CASCADE)
     published_date = models.DateTimeField()
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='user_blogposts')
+    author = models.ForeignKey(Author, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='blog_images/', blank=True, null=True)  # New ImageField
 
     def __str__(self):
@@ -216,24 +236,9 @@ class TeamMember(models.Model):
     image = models.ImageField(upload_to='team_member_images/', blank=True, null=True)  # New ImageField
     social_media_links = models.CharField(max_length=255)
 
-class RoleChoices(models.TextChoices):
-    ADMIN = 'Admin', 'Administrator'
-    EDITOR = 'Editor', 'Editor'
-    CONTRIBUTOR = 'Contributor', 'Contributor'
-    GUEST = 'Guest', 'Guest'
 
 
-class Author(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    username = models.CharField(max_length=100)
-    email = models.EmailField()
-    Author_image = models.ImageField(upload_to='Auther_images/', blank=True, null=True)  # New ImageField
-    roles = models.CharField(max_length=50, choices=RoleChoices.choices, default=RoleChoices.CONTRIBUTOR)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
-    def __str__(self):
-        return self.username
 
 
 class ContactInquirie(models.Model):
@@ -292,8 +297,12 @@ class ContactInquirie(models.Model):
 
 #     class Meta:
 #         ordering = ['-created_date']
+class ServiceType(models.Model):
+    choice_name = models.TextField(max_length=50)
+    
 
-COUNTRY_CHOICES = [(country.alpha_2, country.name) for country in pycountry.countries]
+
+COUNTRY_CHOICES = [(country.name, country.name) for country in pycountry.countries]
 class Case(models.Model):
     STATUS_CHOICES = [
         ('open', 'Open'),
@@ -301,11 +310,7 @@ class Case(models.Model):
         ('closed', 'Closed'),
         ('on_hold', 'On Hold')
     ]
-    SERVICE_TYPE_CHOICES = [
-        ('web', 'Web Development'),
-        ('mobile', 'Mobile App Development'),
-        ('software', 'Software Development'),
-    ]
+
     PRIORITY_CHOICES = [
         ('high', 'High'),
         ('medium', 'Medium'),
@@ -315,22 +320,20 @@ class Case(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
     featured_image = models.ImageField(upload_to='case_featured_images/', blank=True, null=True)
-    service_type = models.CharField(max_length=100, choices=SERVICE_TYPE_CHOICES)
-    industries = models.ManyToManyField(Industrie, blank=True)
+    service_type = models.ManyToManyField(ServiceType, blank=True)
+    industries = models.ForeignKey(Industrie, on_delete=models.CASCADE)
     technologies = models.ManyToManyField(Technologie, blank=True)
-    country = models.CharField(max_length=2, choices=COUNTRY_CHOICES, blank=True, null=True)
+    country = models.CharField(max_length=255, choices=COUNTRY_CHOICES, blank=True, null=True)
     country_image = models.ImageField(upload_to='case_country_images/', blank=True, null=True)
-    case_number = models.CharField(max_length=120, unique=True)
     status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='open')
     priority = models.CharField(max_length=50, choices=PRIORITY_CHOICES, default='medium')
-    assigned_to = models.ForeignKey(User, related_name='assigned_cases', on_delete=models.SET_NULL, null=True)
     created_by = models.ForeignKey(User, related_name='created_cases', on_delete=models.CASCADE)
     created_date = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)
     due_date = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
-        return f"{self.case_number} - {self.title}"
+        return f"{self.title}"
 
     class Meta:
         ordering = ['-created_date']
