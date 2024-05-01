@@ -2,7 +2,7 @@ from django.contrib import admin
 from account.models import User
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from .models import Categorie, Event, Case, Career, Technologie, Industrie, Update, Testimonial, Project, Service, BlogPost, Comment, CompanyInformation, TeamMember, Author, ContactInquirie, PricingEstimate, QuestionsAnswer, Industries_we_serve
-from .forms import BlogPostForm,CaseForm
+from .forms import BlogPostForm
 from tinymce.widgets import TinyMCE
 from django.db import models  # This import is necessary for models.TextField
 
@@ -64,10 +64,6 @@ class CareerAdmin(admin.ModelAdmin):
 
 @admin.register(Case)
 class CaseAdmin(admin.ModelAdmin):
-    form = CaseForm
-    formfield_overrides = {
-        models.TextField: {'widget': TinyMCE(attrs={'cols': 80, 'rows': 30})},
-    }
     list_display = ('case_number', 'title', 'status', 'priority', 'get_industries', 'get_technologies', 'assigned_to', 'created_by')
     search_fields = ('title', 'description', 'case_number')
     list_filter = ('status', 'priority', 'created_by', 'assigned_to')

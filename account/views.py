@@ -198,7 +198,7 @@ class CareerViewSet(viewsets.ModelViewSet):
 class PricingEstimateViewSet(viewsets.ModelViewSet):
     queryset = PricingEstimate.objects.all()
     serializer_class = PricingEstimateSerializer
-   
+    permission_classes = [IsGetRequestOrAdmin]  # Apply the custom permission
 
 
 
