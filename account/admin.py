@@ -2,7 +2,7 @@ from django.contrib import admin
 from account.models import User
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from .models import Categorie, Event,  ServiceType, Case, Career, Technologie, Industrie, Update, Testimonial, Project, Service, BlogPost, Comment, CompanyInformation, TeamMember, Author, ContactInquirie, PricingEstimate, QuestionsAnswer, Industries_we_serve
-from .forms import BlogPostForm
+from .forms import BlogPostForm,CaseForm
 from tinymce.widgets import TinyMCE
 from django.db import models  # This import is necessary for models.TextField
 
@@ -69,9 +69,13 @@ class ServiceTypeAdmin(admin.ModelAdmin):
 
 @admin.register(Case)
 class CaseAdmin(admin.ModelAdmin):
+    form = CaseForm
+    formfield_overrides = {
+        models.TextField: {'widget': TinyMCE(attrs={'cols': 80, 'rows': 30})},
+    }
     list_display = ('title', 'status', 'priority', 'get_service_type', 'industries', 'get_technologies', 'created_by')
     search_fields = ('title', 'description')
-    list_filter = ('status', 'priority', 'created_by')
+    list_filter = ('status', 'priority', 'created_by', 'content')
 
     # def get_industries(self, obj):
     #     return ", ".join([industry.name for industry in obj.industries.all()])
@@ -127,7 +131,7 @@ class BlogPostAdmin(admin.ModelAdmin):
         models.TextField: {'widget': TinyMCE(attrs={'cols': 80, 'rows': 30})},
     }
     
-    list_display = ('id', 'title', 'heading', 'category', 'published_date', 'author', 'image')
+    list_display = ('id', 'title', 'description', 'category', 'published_date', 'author', 'image')
     list_filter = ('category', 'author')
     search_fields = ('title', 'content')
 

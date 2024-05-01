@@ -203,7 +203,7 @@ class Author(models.Model):
 
 class BlogPost(models.Model):
     title = models.CharField(max_length=255)
-    heading = models.CharField(max_length=255)
+    description = models.CharField(max_length=255)
     # heading = models.TextField('Heading_Content',blank=True)  # Replaces models.TextField()
     content = models.TextField()
     category = models.ForeignKey(Categorie, on_delete=models.CASCADE)
@@ -318,8 +318,9 @@ class Case(models.Model):
     ]
 
     title = models.CharField(max_length=255)
-    description = models.TextField()
+    description = models.CharField(max_length=255)
     featured_image = models.ImageField(upload_to='case_featured_images/', blank=True, null=True)
+    content = models.TextField()
     service_type = models.ManyToManyField(ServiceType, blank=True)
     industries = models.ForeignKey(Industrie, on_delete=models.CASCADE)
     technologies = models.ManyToManyField(Technologie, blank=True)
