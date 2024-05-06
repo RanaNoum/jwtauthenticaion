@@ -429,9 +429,9 @@ def send_email_on_new_estimate(sender, instance, created, **kwargs):
             Kindly also review the client's file
             which is mentioned below.
         """
-        from_email = '18251598-111@uog.edu.pk'
+        from_email = 'info@labverse.co'
         client_email = [instance.contact_information]
-        company_email = ['usman.latif.raw@gmail.com']
+        company_email = ['cost@labverse.co']
 
         with lock:
             # Send personalized message to the client
