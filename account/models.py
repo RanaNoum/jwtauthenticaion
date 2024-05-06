@@ -356,7 +356,7 @@ class PricingEstimate(models.Model):
     additional_costs = models.DecimalField(max_digits=10, decimal_places=2, default=0, help_text="Additional costs")
     total_estimated_cost = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, help_text="Automatically calculated total cost")
     Name = models.CharField(max_length=50, help_text="Name")
-    contact_information = models.EmailField(max_length=255, verbose_name="Contact Information")
+    contact_information = models.EmailField(max_length=255, verbose_name="Email Information")
     submitted_on = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=100, default='pending', help_text="Status of the estimate")
     
