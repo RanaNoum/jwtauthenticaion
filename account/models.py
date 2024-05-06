@@ -257,46 +257,6 @@ class ContactInquirie(models.Model):
 
 
 
-# class Case(models.Model):
-#     STATUS_CHOICES = [
-#         ('open', 'Open'),
-#         ('in_progress', 'In Progress'),
-#         ('closed', 'Closed'),
-#         ('on_hold', 'On Hold')
-#     ]
-#     SERVICE_TYPE_CHOICES = [
-#         ('web', 'Web Development'),
-#         ('mobile', 'Mobile App Development'),
-#         ('software', 'Software Development'),
-#     ]
-#     PRIORITY_CHOICES = [
-#         ('high', 'High'),
-#         ('medium', 'Medium'),
-#         ('low', 'Low')
-#     ]
-
-#     title = models.CharField(max_length=255)
-#     description = models.TextField()
-#     featured_image = models.ImageField(upload_to='Casefeatured_images/', blank=True, null=True)
-#     service_type = models.CharField(max_length=100, choices=SERVICE_TYPE_CHOICES)
-#     industries = models.ForeignKey(Industrie, on_delete=models.CASCADE)
-#     technologies = models.ForeignKey(Technologie, on_delete=models.CASCADE)
-#     country = models.CharField(max_length=2, choices=COUNTRY_CHOICES, blank=True, null=True)
-#     country_image = models.ImageField(upload_to='case/', blank=True, null=True)
-#     case_number = models.CharField(max_length=120, unique=True)
-#     status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='open')
-#     priority = models.CharField(max_length=50, choices=PRIORITY_CHOICES, default='medium')
-#     assigned_to = models.ForeignKey(User, related_name='assigned_cases', on_delete=models.SET_NULL, null=True)
-#     created_by = models.ForeignKey(User, related_name='created_cases', on_delete=models.CASCADE)
-#     created_date = models.DateTimeField(auto_now_add=True)
-#     modified_date = models.DateTimeField(auto_now=True)
-#     due_date = models.DateTimeField(null=True, blank=True)
-
-#     def __str__(self):
-#         return f"{self.case_number} - {self.title}"
-
-#     class Meta:
-#         ordering = ['-created_date']
 class ServiceType(models.Model):
     choice_name = models.TextField(max_length=50)
     
@@ -368,61 +328,8 @@ class Career(models.Model):
 
 
 
-# class PricingEstimate(models.Model):
-#     SERVICE_TYPE_CHOICES = [
-#         ('web', 'Web Development'),
-#         ('mobile', 'Mobile App Development'),
-#         ('software', 'Software Development'),
-#     ]
-#     COMPLEXITY_CHOICES = [
-#         ('low', 'Low'),
-#         ('medium', 'Medium'),
-#         ('high', 'High'),
-#     ]
-
-#     service_type = models.CharField(max_length=100, choices=SERVICE_TYPE_CHOICES)
-#     feature_set = models.TextField(help_text="Detailed description of the requested features")
-#     complexity = models.CharField(max_length=10, choices=COMPLEXITY_CHOICES)
-#     estimated_hours = models.DecimalField(max_digits=6, decimal_places=2, help_text="Estimated hours to complete the project")
-#     hourly_rate = models.DecimalField(max_digits=10, decimal_places=2, help_text="Hourly rate for the service")
-#     additional_costs = models.DecimalField(max_digits=10, decimal_places=2, default=0, help_text="Additional costs")
-#     discounts = models.DecimalField(max_digits=10, decimal_places=2, default=0, help_text="Discounts applied")
-#     total_estimated_cost = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, help_text="Automatically calculated total cost")
-#     contact_information = models.EmailField(max_length=255, verbose_name="Contact Information")
-#     submitted_on = models.DateTimeField(auto_now_add=True)
-#     status = models.CharField(max_length=100, default='pending', help_text="Status of the estimate")
-    
-#     # Add a file upload field
-#     file = models.FileField(upload_to='pricing_files/', blank=True, null=True)
-
-
-#     def save(self, *args, **kwargs):
-#         # Calculate total estimated cost
-#         self.total_estimated_cost = (self.estimated_hours * self.hourly_rate) + self.additional_costs - self.discounts
-#         super().save(*args, **kwargs)
-
-#     def __str__(self):
-#         return f"{self.service_type} for {self.client_information} on {self.submitted_on.strftime('%Y-%m-%d')}"
-
-#     class Meta:
-#         verbose_name = 'Pricing Estimate'
-#         verbose_name_plural = 'Pricing Estimates'
-#         ordering = ['-submitted_on']
-
-
-
 from django.db import models
-from django.core.mail import send_mail
 from django.conf import settings
-from django.core.mail import send_mail
-from django.template.loader import render_to_string
-from django.utils.html import strip_tags
-from django.db import models
-from django.core.mail import send_mail
-from django.conf import settings
-from django.core.mail import send_mail
-from django.template.loader import render_to_string
-from django.utils.html import strip_tags
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from mimetypes import guess_type
@@ -447,145 +354,319 @@ class PricingEstimate(models.Model):
     estimated_hours = models.DecimalField(max_digits=6, decimal_places=2, help_text="Estimated hours to complete the project")
     hourly_rate = models.DecimalField(max_digits=10, decimal_places=2, help_text="Hourly rate for the service")
     additional_costs = models.DecimalField(max_digits=10, decimal_places=2, default=0, help_text="Additional costs")
-    discounts = models.DecimalField(max_digits=10, decimal_places=2, default=0, help_text="Discounts applied")
     total_estimated_cost = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, help_text="Automatically calculated total cost")
+    Name = models.CharField(max_length=50, help_text="Name")
     contact_information = models.EmailField(max_length=255, verbose_name="Contact Information")
     submitted_on = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=100, default='pending', help_text="Status of the estimate")
     
     # Add a file upload field
     file = models.FileField(upload_to='pricing_files/', blank=True, null=True)
-
 lock = threading.Lock()
+
 
 @receiver(post_save, sender=PricingEstimate)
 def send_email_on_new_estimate(sender, instance, created, **kwargs):
     if created:
-        subject = 'New Pricing Estimate Received'
-        message = f"""
+        subject = 'Confirmation Email'
+        client_message = f"""
+            Dear {instance.Name},
+
+            Thank you for approaching us for services.
+            
+            
+            I have received your service needs. 
+            We appreciate your interest in our services.
+            Our team will review your request and
+            contact you as soon as possible to discuss further
+            details.
+            
+            
+            And you have filled this information.
+            
             Service Type: {instance.service_type}
             Feature Set: {instance.feature_set}
             Complexity: {instance.complexity}
             Estimated Hours: {instance.estimated_hours}
             Hourly Rate: {instance.hourly_rate}
             Additional Costs: {instance.additional_costs}
-            Discounts: {instance.discounts}
+            Name: {instance.Name}
             Total Estimated Cost: {instance.total_estimated_cost}
             Contact Information: {instance.contact_information}
+           
+            
+
+
+            We look forward to serving you soon.
+           
+            Best regards,
+            [Labvers Software Company]
+        """
+        company_message = f"""
+            Dear Admin:
+
+            New Client is approaching.
+            Kindly review the information.
+
+            
+            "Client information Details"
+
+    
+            Service Type: {instance.service_type}
+            Feature Set: {instance.feature_set}
+            Complexity: {instance.complexity}
+            Estimated Hours: {instance.estimated_hours}
+            Hourly Rate: {instance.hourly_rate}
+            Additional Costs: {instance.additional_costs}
+            Name: {instance.Name}
+            Total Estimated Cost: {instance.total_estimated_cost}
+            Contact Information: {instance.contact_information}
+            This is all client information.
+
+            
+
+
+            Kindly also review the client's file
+            which is mentioned below.
         """
         from_email = '18251598-111@uog.edu.pk'
-        recipient_list = [instance.contact_information]
-        # if instance.file:
-        #     file_attachment = instance.file.file
-        #     send_mail(subject, message, from_email, recipient_list, attachments=[(file_attachment.name, file_attachment.read(), mimetypes.guess_type(file_attachment.name)[0])])
-        # else:
-        #     send_mail(subject, message, from_email, recipient_list)
-        # if instance.file:
-        #     file_attachment = instance.file.file
-        #     email = EmailMessage(subject, message, from_email, recipient_list)
-        #     email.attach(file_attachment.name, file_attachment.read(), file_attachment.file.mimetype)
-        #     email.send()
-        # else:
-        #     send_mail(subject, message, from_email, recipient_list)
-        # if instance.file:
-        #     file_attachment = instance.file.file
-        #     mimetype, _ = guess_type(file_attachment.name)
-        #     email = EmailMessage(subject, message, from_email, recipient_list)
-        #     email.attach(file_attachment.name, file_attachment.read(), mimetype)
-        #     email.send()
-        # else:
-        #     send_mail(subject, message, from_email, recipient_list)
-
+        client_email = [instance.contact_information]
+        company_email = ['usman.latif.raw@gmail.com']
 
         with lock:
+            # Send personalized message to the client
+            client_email_message = EmailMessage(subject, client_message, from_email, client_email)
             if instance.file:
                 file_attachment = instance.file.file
                 mimetype, _ = guess_type(file_attachment.name)
-                email = EmailMessage(subject, message, from_email, recipient_list)
-                email.attach(file_attachment.name, file_attachment.read(), mimetype)
-                email.send()
-            else:
-                send_mail(subject, message, from_email, recipient_list)
+                client_email_message.attach(file_attachment.name, file_attachment.read(), mimetype)
+            client_email_message.send()
+
+            # Send only relevant information to the company, no personalization
+            company_email_message = EmailMessage(subject, company_message, from_email, company_email)
+            if instance.file:
+                file_attachment = instance.file.file  # This line is redundant if file is already attached above, just illustrating
+                mimetype, _ = guess_type(file_attachment.name)
+                company_email_message.attach(file_attachment.name, file_attachment.read(), mimetype)
+            company_email_message.send()
 
 
 
-    # def __str__(self):
-    #   return f"{self.service_type} - {self.total_estimated_cost}"
+# @receiver(post_save, sender=PricingEstimate)
+# def send_email_on_new_estimate(sender, instance, created, **kwargs):
+#     if created:
+#         subject = 'New Pricing Estimate Received'
+#         client_message = f"""
+#             Dear {instance.Name},
+#             Thank you for approaching us for services. I have received your service needs. We appreciate your interest for our services.
+#             Our team will review your request and contact you as soon as possible to discuss further details.
+#             And you have filled this information.
+#             Please find the details of your estimate below:
+#             Service Type: {instance.service_type}
+#             Feature Set: {instance.feature_set}
+#             Complexity: {instance.complexity}
+#             Estimated Hours: {instance.estimated_hours}
+#             Hourly Rate: {instance.hourly_rate}
+#             Additional Costs: {instance.additional_costs}
+#             Name: {instance.Name}
+#             Total Estimated Cost: {instance.total_estimated_cost}
+#             Contact Information: {instance.contact_information}
+#             We look forward to serving you soon.
+#             Best regards,
+#             [Labverse]
+#         """
+#         company_message = f"""
+#             Service Type: {instance.service_type}
+#             Feature Set: {instance.feature_set}
+#             Complexity: {instance.complexity}
+#             Estimated Hours: {instance.estimated_hours}
+#             Hourly Rate: {instance.hourly_rate}
+#             Additional Costs: {instance.additional_costs}
+#             Name: {instance.Name}
+#             Total Estimated Cost: {instance.total_estimated_cost}
+#             Contact Information: {instance.contact_information}
+#         """
+#         from_email = '18251598-111@uog.edu.pk'
+#         recipient_list = [instance.contact_information, 'usman.latif.raw@gmail.com']  # Add company email here
 
-    # def save(self, *args, **kwargs):
-    #     is_new = self.pk is None  # Check if the instance is new
-    #     super().save(*args, **kwargs)  # Call the real save() method
-    #     if is_new:  # Only send email if it's a new instance
-    #         subject = 'Thank you for your request'
-    #         message = f"Dear user, thank you for your request. Here are the details:\n\nService Type: {self.service_type}\nComplexity: {self.complexity}\nEstimated Hours: {self.estimated_hours}\nHourly Rate: {self.hourly_rate}\nAdditional Costs: {self.additional_costs}\nDiscounts: {self.discounts}\nTotal Estimated Cost: {self.total_estimated_cost}\n\nBest regards,\nYour Company Name"
-    #         send_mail(
-    #             subject,
-    #             message,
-    #             settings.EMAIL_HOST_USER,
-    #             [self.contact_information],
-    #             fail_silently=False,
-    #         )
-
-    # def __str__(self):
-    #     return f"{self.service_type} - {self.total_estimated_cost}"
-
-
-
-    # def save(self, *args, **kwargs):
-    #     is_new = self.pk is None
-    #     super().save(*args, **kwargs)  # Call the "real" save() method.
-    #     if is_new:
-    #         send_mail(
-    #             'Pricing Estimate Created',
-    #             'Here is the message.',
-    #             '18251598-111@uog.edu.pk',
-    #             [self.contact_information],
-    #             fail_silently=False,
-    #         )
+#         with lock:
+#             if instance.file:
+#                 file_attachment = instance.file.file
+#                 mimetype, _ = guess_type(file_attachment.name)
+#                 email = EmailMessage(subject, client_message, from_email, recipient_list)
+#                 email.attach(file_attachment.name, file_attachment.read(), mimetype)
+#                 email.send()
+#             else:
+#                 email = EmailMessage(subject, client_message, from_email, [instance.contact_information])
+#                 email.attach_alternative(company_message, 'text/plain')
+#                 email.send()
+                
+#                 # Send only field information and file attachment to company email
+#                 email = EmailMessage(subject, company_message, from_email, ['usman.latif.raw@gmail.com'])
+#                 email.attach(file_attachment.name, file_attachment.read(), mimetype)
+#                 email.send()
 
 
-    # def save(self, *args, **kwargs):
-    #     # Calculate total estimated cost
-    #     self.total_estimated_cost = (self.estimated_hours * self.hourly_rate) + self.additional_costs - self.discounts
-    #     super().save(*args, **kwargs)  # Call the real save() method
 
-    #     # Send email notification to admin
-    #     subject = "Pricing Estimate Submission"
-    #     message = (f"New Pricing Estimate Submitted:\n\n"
-    #                f"Service Type: {self.service_type}\n"
-    #                f"Features: {self.feature_set}\n"
-    #                f"Complexity: {self.complexity}\n"
-    #                f"Estimated Hours: {self.estimated_hours}\n"
-    #                f"Hourly Rate: {self.hourly_rate}\n"
-    #                f"Additional Costs: {self.additional_costs}\n"
-    #                f"Discounts: {self.discounts}\n"
-    #                f"Total Estimated Cost: {self.total_estimated_cost}\n"
-    #                f"Contact Information: {self.contact_information}\n"
-    #                f"Submitted On: {self.submitted_on.strftime('%Y-%m-%d %H:%M')}\n"
-    #                f"Status: {self.status}\n")
-    #     from_email = settings.EMAIL_HOST_USER
-    #     recipient_list = ['admin@example.com']  # Admin's email, adjust as necessary
 
-    #     send_mail(subject, message, from_email, recipient_list, fail_silently=False)
 
-    # def save(self, *args, **kwargs):
-    #     # Save the instance
-    #      super().save(*args, **kwargs)
 
-    #     # Send email
-    #      subject = 'New Pricing Estimate Received'
-    #      context = {
-    #         'service_type': self.service_type,
-    #         'feature_set': self.feature_set,
-    #         # Add more fields as needed
-    #     }
-    #      html_message = render_to_string('pricing_email.html', context)
-    #      plain_message = strip_tags(html_message)
-    #      from_email = '18251598-111@uog.edu.pk'  # Replace with your email
-    #      to_emails = ['admin@example.com']  # Replace with admin's email
-    #      send_mail(subject, plain_message, from_email, to_emails, html_message=html_message)
- 
+# @receiver(post_save, sender=PricingEstimate)
+# def send_email_on_new_estimate(sender, instance, created, **kwargs):
+#     if created:
+#         subject = 'Confirmation Email from Labverse'
+#         client_message = f"""
+#             Dear {instance.Name},
+#             Thank you for approaching us for services. I have received your service needs. We appreciate your interest for our services.
+#             Our team will review your request and contact you as soon as possible to discuss further details.
+#             And you have filled this information.
+#             Please find the details of your estimate below:
+#             Service Type: {instance.service_type}
+#             Feature Set: {instance.feature_set}
+#             Complexity: {instance.complexity}
+#             Estimated Hours: {instance.estimated_hours}
+#             Hourly Rate: {instance.hourly_rate}
+#             Additional Costs: {instance.additional_costs}
+#             Name: {instance.Name}
+#             Total Estimated Cost: {instance.total_estimated_cost}
+#             Contact Information: {instance.contact_information}
+#             We look forward to serving you soon.
+#             Best regards,
+#             [Labverse]
+#         """
+#         company_message = f"""
+#             Service Type: {instance.service_type}
+#             Feature Set: {instance.feature_set}
+#             Complexity: {instance.complexity}
+#             Estimated Hours: {instance.estimated_hours}
+#             Hourly Rate: {instance.hourly_rate}
+#             Additional Costs: {instance.additional_costs}
+#             Name: {instance.Name}
+#             Total Estimated Cost: {instance.total_estimated_cost}
+#             Contact Information: {instance.contact_information}
+#         """
+#         from_email = '18251598-111@uog.edu.pk'
+#         recipient_list = [instance.contact_information, 'usman.latif.raw@gmail.com']  # Add company email here
 
+#         with lock:
+#             if instance.file:
+#                 file_attachment = instance.file.file
+#                 mimetype, _ = guess_type(file_attachment.name)
+#                 email = EmailMessage(subject, client_message, from_email, recipient_list)
+#                 email.attach(file_attachment.name, file_attachment.read(), mimetype)
+#                 email.send()
+#             else:
+#                 email = EmailMessage(subject, client_message, from_email, [instance.contact_information])
+#                 email.attach_alternative(company_message, 'text/plain')
+#                 email.send()
+                
+#                 # Send file attachment to company email
+#                 email = EmailMessage(subject, company_message, from_email, ['usman.latif.raw@gmail.com'])
+#                 if instance.file:
+#                     file_attachment = instance.file.file
+#                     mimetype, _ = guess_type(file_attachment.name)
+#                     email.attach(file_attachment.name, file_attachment.read(), mimetype)
+#                 email.send()
+
+
+
+
+# @receiver(post_save, sender=PricingEstimate)
+# def send_email_on_new_estimate(sender, instance, created, **kwargs):
+#     if created:
+#         subject = 'New Pricing Estimate Received'
+#         client_message = f"""
+#             Dear {instance.Name},
+#             Thank you for approaching us for services. 
+#             I have received your  service needs. We appreciate your interest for our services.
+#             Our team will review your request and contact you as soon as possible to discuss further details.
+#             And you have filled this information.
+#             Please find the details of your estimate below:
+#             Service Type: {instance.service_type}
+#             Feature Set: {instance.feature_set}
+#             Complexity: {instance.complexity}
+#             Estimated Hours: {instance.estimated_hours}
+#             Hourly Rate: {instance.hourly_rate}
+#             Additional Costs: {instance.additional_costs}
+#             Name: {instance.Name}
+#             Total Estimated Cost: {instance.total_estimated_cost}
+#             Contact Information: {instance.contact_information}
+#             We look forward to serving you soon.
+#             Best regards,
+#             [Labverse]
+#         """
+#         company_message = f"""
+#             Service Type: {instance.service_type}
+#             Feature Set: {instance.feature_set}
+#             Complexity: {instance.complexity}
+#             Estimated Hours: {instance.estimated_hours}
+#             Hourly Rate: {instance.hourly_rate}
+#             Additional Costs: {instance.additional_costs}
+#             Name: {instance.Name}
+#             Total Estimated Cost: {instance.total_estimated_cost}
+#             Contact Information: {instance.contact_information}
+#         """
+#         from_email = '18251598-111@uog.edu.pk'
+#         recipient_list = [instance.contact_information, 'company_email@example.com']  # Add company email here
+#         with lock:
+#             if instance.file:
+#                 file_attachment = instance.file.file
+#                 mimetype, _ = guess_type(file_attachment.name)
+#                 email = EmailMessage(subject, client_message, from_email, recipient_list)
+#                 email.attach(file_attachment.name, file_attachment.read(), mimetype)
+#                 email.send()
+#             else:
+#                 email = EmailMessage(subject, client_message, from_email, [instance.contact_information])
+#                 email.attach_alternative(company_message, 'text/plain')
+#                 email.send()
+
+
+
+
+
+# @receiver(post_save, sender=PricingEstimate)
+# def send_email_on_new_estimate(sender, instance, created, **kwargs):
+#     if created:
+#         subject = 'New Pricing Estimate Received'
+#         message = f"""
+#         Dear {instance.contact_information},
+
+#             Thank you for approaching us for services.
+#             I have recerived your needs. We appreciate your interest in our services.
+#             Our team will review your request and contact you as soon as possible to discuss further details.
+            
+#             And you have filled this information.
+#             Please find the details of your estimate below:
+#             Service Type: {instance.service_type}
+#             Feature Set: {instance.feature_set}
+#             Complexity: {instance.complexity}
+#             Estimated Hours: {instance.estimated_hours}
+#             Hourly Rate: {instance.hourly_rate}
+#             Additional Costs: {instance.additional_costs}
+#             Discounts: {instance.Name}
+#             Total Estimated Cost: {instance.total_estimated_cost}
+#             Contact Information: {instance.contact_information}
+
+
+#          We look forward to serving you soon.
+
+#             Best regards,
+#             [Labverse]
+
+
+
+#         """
+#         from_email = '18251598-111@uog.edu.pk'
+#         recipient_list = [instance.contact_information]
+#         with lock:
+#             if instance.file:
+#                 file_attachment = instance.file.file
+#                 mimetype, _ = guess_type(file_attachment.name)
+#                 email = EmailMessage(subject, message, from_email, recipient_list)
+#                 email.attach(file_attachment.name, file_attachment.read(), mimetype)
+#                 email.send()
+#             else:
+#                 send_mail(subject, message, from_email, recipient_list)
 
 
 
