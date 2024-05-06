@@ -417,7 +417,17 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
-
+from django.db import models
+from django.core.mail import send_mail
+from django.conf import settings
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from mimetypes import guess_type
+from django.core.mail.message import EmailMessage
+import threading
 
 class PricingEstimate(models.Model):
     SERVICE_TYPE_CHOICES = [
@@ -446,8 +456,61 @@ class PricingEstimate(models.Model):
     # Add a file upload field
     file = models.FileField(upload_to='pricing_files/', blank=True, null=True)
 
-    def __str__(self):
-      return f"{self.service_type} - {self.total_estimated_cost}"
+lock = threading.Lock()
+
+@receiver(post_save, sender=PricingEstimate)
+def send_email_on_new_estimate(sender, instance, created, **kwargs):
+    if created:
+        subject = 'New Pricing Estimate Received'
+        message = f"""
+            Service Type: {instance.service_type}
+            Feature Set: {instance.feature_set}
+            Complexity: {instance.complexity}
+            Estimated Hours: {instance.estimated_hours}
+            Hourly Rate: {instance.hourly_rate}
+            Additional Costs: {instance.additional_costs}
+            Discounts: {instance.discounts}
+            Total Estimated Cost: {instance.total_estimated_cost}
+            Contact Information: {instance.contact_information}
+        """
+        from_email = '18251598-111@uog.edu.pk'
+        recipient_list = [instance.contact_information]
+        # if instance.file:
+        #     file_attachment = instance.file.file
+        #     send_mail(subject, message, from_email, recipient_list, attachments=[(file_attachment.name, file_attachment.read(), mimetypes.guess_type(file_attachment.name)[0])])
+        # else:
+        #     send_mail(subject, message, from_email, recipient_list)
+        # if instance.file:
+        #     file_attachment = instance.file.file
+        #     email = EmailMessage(subject, message, from_email, recipient_list)
+        #     email.attach(file_attachment.name, file_attachment.read(), file_attachment.file.mimetype)
+        #     email.send()
+        # else:
+        #     send_mail(subject, message, from_email, recipient_list)
+        # if instance.file:
+        #     file_attachment = instance.file.file
+        #     mimetype, _ = guess_type(file_attachment.name)
+        #     email = EmailMessage(subject, message, from_email, recipient_list)
+        #     email.attach(file_attachment.name, file_attachment.read(), mimetype)
+        #     email.send()
+        # else:
+        #     send_mail(subject, message, from_email, recipient_list)
+
+
+        with lock:
+            if instance.file:
+                file_attachment = instance.file.file
+                mimetype, _ = guess_type(file_attachment.name)
+                email = EmailMessage(subject, message, from_email, recipient_list)
+                email.attach(file_attachment.name, file_attachment.read(), mimetype)
+                email.send()
+            else:
+                send_mail(subject, message, from_email, recipient_list)
+
+
+
+    # def __str__(self):
+    #   return f"{self.service_type} - {self.total_estimated_cost}"
 
     # def save(self, *args, **kwargs):
     #     is_new = self.pk is None  # Check if the instance is new

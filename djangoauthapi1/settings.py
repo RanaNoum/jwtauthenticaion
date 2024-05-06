@@ -24,26 +24,39 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-_zk=9yl=ul!po@_z-)wq&x4=&!(ons2(pogyu52+f7f37v3j$y'
-
+# SECURITY WARNING: keep the secret key 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-ALLOWED_HOSTS = []
+try:
+    SECRET_KEY = os.environ["SECRET_KEY"]
+except KeyError as e:
+    raise RuntimeError("Could not find a SECRET_KEY in environment") from e
 
+
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+
+if DEBUG:
+    ALLOWED_HOSTS = []
+else:
+    ALLOWED_HOSTS = ['api.labverse.co']
+
+
+# DEBUG = True
+# ALLOWED_HOSTS = ['api.labverse.co']
+# 'api.labverse.co'
+# DEBUG = False
 
 # Application definition
 
 INSTALLED_APPS = [
     'jazzmin',
+    'tinymce',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'tinymce',
     'corsheaders',
     'rest_framework',
     'rest_framework_simplejwt',
@@ -169,7 +182,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = "/var/www/api.labverse.co/static"
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
@@ -182,7 +199,7 @@ AUTH_USER_MODEL = 'account.User'
 
 
 # Email Configuration
-EMAIL_BACKEND="django.core.mail.backends.smtp.EmailBackend"
+EMAIL_BACKEND= 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = os.environ.get('EMAIL_USER')
