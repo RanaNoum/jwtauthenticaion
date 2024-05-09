@@ -167,12 +167,62 @@ class ContactInquiryAdmin(admin.ModelAdmin):
     search_fields = ['name', 'email']
 
 
+# @admin.register(PricingEstimate)
+# class PricingEstimateAdmin(admin.ModelAdmin):
+#     list_display = ['service_type', 'contact_information', 'submitted_on', 'total_estimated_cost', 'status', 'file']
+#     list_filter = ['service_type', 'complexity', 'status', 'submitted_on']
+#     search_fields = ['client_information', 'feature_set']
+#     date_hierarchy = 'submitted_on'
+
+
+from django.contrib import admin
+
+from .models import PricingEstimate
+
 @admin.register(PricingEstimate)
 class PricingEstimateAdmin(admin.ModelAdmin):
-    list_display = ['service_type', 'contact_information', 'submitted_on', 'total_estimated_cost', 'status', 'file']
-    list_filter = ['service_type', 'complexity', 'status', 'submitted_on']
-    search_fields = ['client_information', 'feature_set']
-    date_hierarchy = 'submitted_on'
+    list_display = ['contact_name', 'platform', 'stage', 'need_investor', 'total_estimated_cost', 'status', 'file']
+    list_filter = ['stage', 'platform', 'need_investor', 'status']
+    search_fields = ['contact_name', 'contact_email']
+
+
+
+# class FeatureInline(admin.TabularInline):
+#     model = PricingEstimate.additional_features.through
+#     extra = 1  # How many rows to show
+
+
+
+# @admin.register(PricingEstimate)
+# class PricingEstimateAdmin(admin.ModelAdmin):
+#     list_display = ('contact_name', 'platform', 'stage', 'need_investor', 'total_estimated_cost', 'status', 'submitted_on', 'file')
+#     list_filter = ('platform', 'stage', 'need_investor', 'status')
+#     search_fields = ('contact_name', 'contact_email')
+#     inlines = [FeatureInline]
+#     fieldsets = (
+#         ('Client Information', {
+#             'fields': ('contact_name', 'contact_email')
+#         }),
+#         ('Project Details', {
+#             'fields': ('stage', 'platform', 'need_investor', 'screen_range', 'estimated_hours', 'hourly_rate', 'additional_costs', 'total_estimated_cost', 'status')
+#         }),
+#         ('Additional Features', {
+#             'fields': ('additional_features',)
+#         }),
+#     )
+#     readonly_fields = ('submitted_on',)
+    
+#     def save_model(self, request, obj, form, change):
+#         super().save_model(request, obj, form, change)
+#         # Custom save logic or post-processing after save can be added here
+
+#     def save_formset(self, request, form, formset, change):
+#         super().save_formset(request, form, formset, change)
+#         # Custom save logic for inline forms
+
+
+
+
 
 
 

@@ -196,8 +196,8 @@ class TestimonialSerializer(serializers.ModelSerializer):
 
 
 class ProjectSerializer(serializers.ModelSerializer):
-    # categories = CategorySerializer(many=True)
-    # Technology = TechnologySerializer()
+    categories = CategorySerializer(read_only=True)
+    Technology = TechnologySerializer(read_only=True)
     # client_testimonials = TestimonialSerializer(many=True)
 
     class Meta:
@@ -250,10 +250,38 @@ class CareerSerializer(serializers.ModelSerializer):
 
 
 
+# class PricingEstimateSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = PricingEstimate
+#         fields = '__all__'
+
+
+
+from rest_framework import serializers
+from .models import PricingEstimate
+
+
 class PricingEstimateSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = PricingEstimate
         fields = '__all__'
+
+    def create(self, validated_data):
+        # Custom creation logic, if necessary
+        instance = super().create(validated_data)
+        return instance
+
+    def update(self, instance, validated_data):
+        # Custom update logic, if necessary
+        instance = super().update(instance, validated_data)
+        return instance
+
+
+
+
+
+
 
 
 from .models import Update

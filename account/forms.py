@@ -24,3 +24,11 @@ class CaseForm(forms.ModelForm):
 #     class Meta:
 #         model = PricingEstimate
 #         fields = ['service_type', 'feature_set', 'complexity', 'estimated_hours', 'hourly_rate', 'additional_costs', 'discounts', 'contact_information', 'file']
+
+
+
+
+# class PricingEstimateForm(forms.ModelForm):
+#     class Meta:
+#         model = PricingEstimate
+#         fields = '__all__'

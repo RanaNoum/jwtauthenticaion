@@ -96,7 +96,7 @@ class Categorie(models.Model):
     name = models.CharField(max_length=255)
     blog_post_categories=models.CharField(max_length=255)
     def __str__(self):
-        return self.name
+        return f"{self.name} ({self.blog_post_categories})"
     
 
 class Event(models.Model):
@@ -129,12 +129,15 @@ class Technologie(models.Model):
     name = models.CharField(max_length=100)
     image = models.ImageField(upload_to='technology_images/', blank=True, null=True)  # New ImageField
     description = models.TextField()
-    
+    def __str__(self):
+        return self.name 
 
 class Industrie(models.Model):
     name = models.CharField(max_length=100)
     image = models.ImageField(upload_to='industry_images/', blank=True, null=True)  # New ImageField
     description = models.TextField()    
+    def __str__(self):
+        return self.name 
 
 class RatingChoices(models.IntegerChoices):
     ONE = 1, '1'
@@ -159,7 +162,6 @@ class Project(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='user_projects')
     category = models.ForeignKey(Categorie, on_delete=models.CASCADE,related_name='Blog_post_categories')
     technologies = models.ForeignKey(Technologie, on_delete=models.CASCADE)
-
     start_date = models.DateField()
     end_date = models.DateField(null=True, blank=True)
     status = models.CharField(
@@ -328,110 +330,198 @@ class Career(models.Model):
 
 
 
+# from django.db import models
+# from django.conf import settings
+# from django.db.models.signals import post_save
+# from django.dispatch import receiver
+# from mimetypes import guess_type
+# from django.core.mail.message import EmailMessage
+# import threading
+
+# class PricingEstimate(models.Model):
+#     SERVICE_TYPE_CHOICES = [
+#         ('web', 'Web Development'),
+#         ('mobile', 'Mobile App Development'),
+#         ('software', 'Software Development'),
+#     ]
+#     COMPLEXITY_CHOICES = [
+#         ('low', 'Low'),
+#         ('medium', 'Medium'),
+#         ('high', 'High'),
+#     ]
+
+#     service_type = models.CharField(max_length=100, choices=SERVICE_TYPE_CHOICES)
+#     feature_set = models.TextField(help_text="Detailed description of the requested features")
+#     complexity = models.CharField(max_length=10, choices=COMPLEXITY_CHOICES)
+#     estimated_hours = models.DecimalField(max_digits=6, decimal_places=2, help_text="Estimated hours to complete the project")
+#     hourly_rate = models.DecimalField(max_digits=10, decimal_places=2, help_text="Hourly rate for the service")
+#     additional_costs = models.DecimalField(max_digits=10, decimal_places=2, default=0, help_text="Additional costs")
+#     total_estimated_cost = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, help_text="Automatically calculated total cost")
+#     Name = models.CharField(max_length=50, help_text="Name")
+#     contact_information = models.EmailField(max_length=255, verbose_name="Email Information")
+#     submitted_on = models.DateTimeField(auto_now_add=True)
+#     status = models.CharField(max_length=100, default='pending', help_text="Status of the estimate")
+    
+#     # Add a file upload field
+#     file = models.FileField(upload_to='pricing_files/', blank=True, null=True)
+# lock = threading.Lock()
+
+
+
 from django.db import models
-from django.conf import settings
+from django.core.mail.message import EmailMessage
+from mimetypes import guess_type
+import threading
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from mimetypes import guess_type
-from django.core.mail.message import EmailMessage
-import threading
+from django.core import serializers
+import json
+from django.core.exceptions import ValidationError
+
+# class Feature(models.Model):
+#     FEATURE_SET_CHOICES = [
+#         ('messaging', 'Messaging'),
+#         ('geolocation', 'Geolocation'),
+#         ('shopping_cart', 'Shopping Cart & Orders History'),
+#         ('cms', 'Basic CMS for Content Uploading'),
+#         ('bluetooth', 'Bluetooth Connectivity'),
+#         ('camera', 'Camera (QR Code Scanning)'),
+#         ('multi_language', 'Multi-language Support'),
+#         ('social_media', 'Social Media Sharing'),
+#     ]
+# class FeatureSetChoices(models.TextChoices):
+#     MESSAGING = 'messaging', 'Messaging'
+#     GEOLOCATION = 'geolocation', 'Geolocation'
+#     SHOPPING_CART = 'shopping_cart', 'Shopping Cart & Orders History'
+#     CMS = 'cms', 'Basic CMS for Content Uploading'
+#     BLUETOOTH = 'bluetooth', 'Bluetooth Connectivity'
+#     CAMERA = 'camera', 'Camera (QR Code Scanning)'
+#     MULTI_LANGUAGE = 'multi_language', 'Multi-language Support'
+#     SOCIAL_MEDIA = 'social_media', 'Social Media Sharing'
+
+
+    # name = models.CharField(max_length=100, choices=FEATURE_SET_CHOICES)
+    
+    # def __str__(self):
+    #     return self.Fe
 
 class PricingEstimate(models.Model):
-    SERVICE_TYPE_CHOICES = [
-        ('web', 'Web Development'),
-        ('mobile', 'Mobile App Development'),
-        ('software', 'Software Development'),
+    STAGE_CHOICES = [
+        ('idea', 'Still an idea'),
+        ('development', 'In Development'),
+        ('completed', 'Completed'),
     ]
-    COMPLEXITY_CHOICES = [
-        ('low', 'Low'),
-        ('medium', 'Medium'),
-        ('high', 'High'),
+    PLATFORM_CHOICES = [
+        ('android', 'Android'),
+        ('ios', 'iOS'),
+        ('web', 'Web'),
+    ]
+    NEED_INVESTOR_CHOICES = [
+        ('yes', 'Yes'),
+        ('no', 'No'),
+    ]
+    SCREEN_RANGE_CHOICES = [
+        ('small', '1-4 screens'),
+        ('medium', '5-8 screens'),
+        ('large', '9-12 screens'),
+    ]
+    FEATURE_SET_CHOICES = [
+        ('messaging', 'Messaging'),
+        ('geolocation', 'Geolocation'),
+        ('shopping_cart', 'Shopping Cart & Orders History'),
+        ('cms', 'Basic CMS for Content Uploading'),
+        ('bluetooth', 'Bluetooth Connectivity'),
+        ('camera', 'Camera (QR Code Scanning)'),
+        ('multi_language', 'Multi-language Support'),
+        ('social_media', 'Social Media Sharing'),
     ]
 
-    service_type = models.CharField(max_length=100, choices=SERVICE_TYPE_CHOICES)
-    feature_set = models.TextField(help_text="Detailed description of the requested features")
-    complexity = models.CharField(max_length=10, choices=COMPLEXITY_CHOICES)
+    stage = models.CharField(max_length=20, choices=STAGE_CHOICES, default='idea')
+    platform = models.CharField(max_length=20, choices=PLATFORM_CHOICES)
+    need_investor = models.CharField(max_length=3, choices=NEED_INVESTOR_CHOICES, default='no')
+    screen_range = models.CharField(max_length=20, choices=SCREEN_RANGE_CHOICES)
+    # additional_features = models.CharField(max_length=300, choices=FEATURE_SET_CHOICES)
+    # additional_features = models.ManyToManyField(Feature, blank=True)
+    # additional_features = models.ManyToManyField(FeatureSetChoices,
+    #     choices=FeatureSetChoices.choices,
+    #     blank=True)
+    additional_features = models.CharField(max_length=100,blank=True,choices=FEATURE_SET_CHOICES)
     estimated_hours = models.DecimalField(max_digits=6, decimal_places=2, help_text="Estimated hours to complete the project")
     hourly_rate = models.DecimalField(max_digits=10, decimal_places=2, help_text="Hourly rate for the service")
     additional_costs = models.DecimalField(max_digits=10, decimal_places=2, default=0, help_text="Additional costs")
     total_estimated_cost = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, help_text="Automatically calculated total cost")
-    Name = models.CharField(max_length=50, help_text="Name")
-    contact_information = models.EmailField(max_length=255, verbose_name="Email Information")
-    submitted_on = models.DateTimeField(auto_now_add=True)
+    contact_name = models.CharField(max_length=50, help_text="Client's full name")
+    contact_email = models.EmailField(max_length=255, help_text="Client's email address")
+    submitted_on = models.DateField(auto_now_add=True)
     status = models.CharField(max_length=100, default='pending', help_text="Status of the estimate")
     
-    # Add a file upload field
+    # File upload field
     file = models.FileField(upload_to='pricing_files/', blank=True, null=True)
-lock = threading.Lock()
 
+
+
+
+# Email sending mechanism using threading for handling post-save signal
+lock = threading.Lock()
 
 @receiver(post_save, sender=PricingEstimate)
 def send_email_on_new_estimate(sender, instance, created, **kwargs):
     if created:
-        subject = 'Confirmation Email'
+        subject = 'Confirmation of Your Pricing Estimate'
         client_message = f"""
-            Dear {instance.Name},
+            Dear {instance.contact_name},
 
             Thank you for approaching us for services.
-            
-            
-            I have received your service needs. 
-            We appreciate your interest in our services.
-            Our team will review your request and
-            contact you as soon as possible to discuss further
-            details.
-            
-            
-            And you have filled this information.
-            
-            Service Type: {instance.service_type}
-            Feature Set: {instance.feature_set}
-            Complexity: {instance.complexity}
-            Estimated Hours: {instance.estimated_hours}
-            Hourly Rate: {instance.hourly_rate}
-            Additional Costs: {instance.additional_costs}
-            Name: {instance.Name}
-            Total Estimated Cost: {instance.total_estimated_cost}
-            Contact Information: {instance.contact_information}
-           
-            
 
+            We have received your request and appreciate your interest in our services.
+            Our team will review your request and contact you as soon as possible to discuss further details.
 
+            Here is the information you provided:
+            - Stage: {instance.get_stage_display()}
+            - Platform: {instance.get_platform_display()}
+            - Needs Investor: {instance.get_need_investor_display()}
+            - Screen Range: {instance.get_screen_range_display()}
+            - Additonal Features: {instance.additional_features}
+            - Total Estimated Cost: {instance.total_estimated_cost}
+            - Contact Email: {instance.contact_email}
+            
+            Your file are here.
+            
+            
             We look forward to serving you soon.
-           
+
             Best regards,
-            [Labvers Software Company]
+            Labvers Software Company
         """
         company_message = f"""
-            Dear Admin:
+            Dear Admin,
 
-            New Client is approaching.
-            Kindly review the information.
+            A new client has approached us with the following details:
 
-            
-            "Client information Details"
+            - Client Name: {instance.contact_name}
+            - Service Stage: {instance.get_stage_display()}
+            - Platform: {instance.get_platform_display()}
+            - Needs Investor: {instance.get_need_investor_display()}
+            - Screen Range: {instance.get_screen_range_display()}
+            - Estimated Hours: {instance.estimated_hours}
+            - Hourly Rate: {instance.hourly_rate}
+            - Additonal Features: {instance.additional_features}
+            - Additional Costs: {instance.additional_costs}
+            - Total Estimated Cost: {instance.total_estimated_cost}
+            - Contact Email: {instance.contact_email}
 
-    
-            Service Type: {instance.service_type}
-            Feature Set: {instance.feature_set}
-            Complexity: {instance.complexity}
-            Estimated Hours: {instance.estimated_hours}
-            Hourly Rate: {instance.hourly_rate}
-            Additional Costs: {instance.additional_costs}
-            Name: {instance.Name}
-            Total Estimated Cost: {instance.total_estimated_cost}
-            Contact Information: {instance.contact_information}
-            This is all client information.
+            Please review the details and the attached file if applicable.
 
-            
+            - Client File: 
 
-
-            Kindly also review the client's file
-            which is mentioned below.
+            Regards,
+            Labvers Software Company
         """
         from_email = 'info@labverse.co'
-        client_email = [instance.contact_information]
+        # from_email = '18251598-111@uog.edu.pk'
+        client_email = [instance.contact_email]
         company_email = ['cost@labverse.co']
+        # company_email = ['usman.latif.raw@gmail.com']
 
         with lock:
             # Send personalized message to the client
@@ -442,13 +532,112 @@ def send_email_on_new_estimate(sender, instance, created, **kwargs):
                 client_email_message.attach(file_attachment.name, file_attachment.read(), mimetype)
             client_email_message.send()
 
-            # Send only relevant information to the company, no personalization
+            # Send only relevant information to the company
             company_email_message = EmailMessage(subject, company_message, from_email, company_email)
             if instance.file:
-                file_attachment = instance.file.file  # This line is redundant if file is already attached above, just illustrating
+                file_attachment = instance.file.file  # Redundant from client email section
                 mimetype, _ = guess_type(file_attachment.name)
                 company_email_message.attach(file_attachment.name, file_attachment.read(), mimetype)
             company_email_message.send()
+
+
+
+
+
+
+
+
+
+# @receiver(post_save, sender=PricingEstimate)
+# def send_email_on_new_estimate(sender, instance, created, **kwargs):
+#     if created:
+#         subject = 'Confirmation Email'
+#         client_message = f"""
+#             Dear {instance.Name},
+
+#             Thank you for approaching us for services.
+            
+            
+#             I have received your service needs. 
+#             We appreciate your interest in our services.
+#             Our team will review your request and
+#             contact you as soon as possible to discuss further
+#             details.
+            
+            
+#             And you have filled this information.
+            
+#             Service Type: {instance.service_type}
+#             Feature Set: {instance.feature_set}
+#             Complexity: {instance.complexity}
+#             Estimated Hours: {instance.estimated_hours}
+#             Hourly Rate: {instance.hourly_rate}
+#             Additional Costs: {instance.additional_costs}
+#             Name: {instance.Name}
+#             Total Estimated Cost: {instance.total_estimated_cost}
+#             Contact Information: {instance.contact_information}
+           
+            
+
+
+#             We look forward to serving you soon.
+           
+#             Best regards,
+#             [Labvers Software Company]
+#         """
+#         company_message = f"""
+#             Dear Admin:
+
+#             New Client is approaching.
+#             Kindly review the information.
+
+            
+#             "Client information Details"
+
+    
+#             Service Type: {instance.service_type}
+#             Feature Set: {instance.feature_set}
+#             Complexity: {instance.complexity}
+#             Estimated Hours: {instance.estimated_hours}
+#             Hourly Rate: {instance.hourly_rate}
+#             Additional Costs: {instance.additional_costs}
+#             Name: {instance.Name}
+#             Total Estimated Cost: {instance.total_estimated_cost}
+#             Contact Information: {instance.contact_information}
+#             This is all client information.
+
+            
+
+
+#             Kindly also review the client's file
+#             which is mentioned below.
+#         """
+#         from_email = 'info@labverse.co'
+#         client_email = [instance.contact_information]
+#         company_email = ['cost@labverse.co']
+
+#         with lock:
+#             # Send personalized message to the client
+#             client_email_message = EmailMessage(subject, client_message, from_email, client_email)
+#             if instance.file:
+#                 file_attachment = instance.file.file
+#                 mimetype, _ = guess_type(file_attachment.name)
+#                 client_email_message.attach(file_attachment.name, file_attachment.read(), mimetype)
+#             client_email_message.send()
+
+#             # Send only relevant information to the company, no personalization
+#             company_email_message = EmailMessage(subject, company_message, from_email, company_email)
+#             if instance.file:
+#                 file_attachment = instance.file.file  # This line is redundant if file is already attached above, just illustrating
+#                 mimetype, _ = guess_type(file_attachment.name)
+#                 company_email_message.attach(file_attachment.name, file_attachment.read(), mimetype)
+#             company_email_message.send()
+
+
+
+
+
+
 
 
 

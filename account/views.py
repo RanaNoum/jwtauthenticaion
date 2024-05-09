@@ -200,10 +200,23 @@ class CareerViewSet(viewsets.ModelViewSet):
     permission_classes = [IsGetRequestOrAdmin]  # Apply the custom permission
 
 
+# class PricingEstimateViewSet(viewsets.ModelViewSet):
+#     queryset = PricingEstimate.objects.all()
+#     serializer_class = PricingEstimateSerializer
+    
+
+from rest_framework import viewsets
+from .models import PricingEstimate
+from .serializers import PricingEstimateSerializer
+
+
 class PricingEstimateViewSet(viewsets.ModelViewSet):
     queryset = PricingEstimate.objects.all()
     serializer_class = PricingEstimateSerializer
-    permission_classes = [IsGetRequestOrAdmin]  # Apply the custom permission
+
+
+
+
 
 
 
