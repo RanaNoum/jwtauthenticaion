@@ -240,6 +240,20 @@ class IndustriesWeServeViewSet(viewsets.ModelViewSet):
 
 
 
+from .models import PrivacyPolicy, TermsAndConditions
+from .serializers import PrivacyPolicySerializer, TermsAndConditionsSerializer
+
+class PrivacyPolicyViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = PrivacyPolicy.objects.all()
+    serializer_class = PrivacyPolicySerializer
+    permission_classes = [IsGetRequestOrAdmin]  # Apply the custom permission
+
+class TermsAndConditionsViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = TermsAndConditions.objects.all()
+    serializer_class = TermsAndConditionsSerializer
+    permission_classes = [IsGetRequestOrAdmin]  # Apply the custom permission
+
+
 
 
 # class AdminCreateAPIView(views.APIView):

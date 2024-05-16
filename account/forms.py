@@ -20,6 +20,28 @@ class CaseForm(forms.ModelForm):
         
         # Make sure to include all other fields you want to be part of the form
 
+
+from .models import PrivacyPolicy, TermsAndConditions
+
+class PrivacyPolicyForm(forms.ModelForm):
+    content = forms.CharField(widget=TinyMCE(attrs={'cols': 80, 'rows': 30}))
+
+    class Meta:
+        model = PrivacyPolicy
+        fields = '__all__'
+        
+
+class TermsAndConditionsForm(forms.ModelForm):
+    content = forms.CharField(widget=TinyMCE(attrs={'cols': 80, 'rows': 30}))
+
+    class Meta:
+        model = TermsAndConditions
+        fields = '__all__'
+        
+
+
+
+
 # class PricingEstimateForm(forms.ModelForm):
 #     class Meta:
 #         model = PricingEstimate

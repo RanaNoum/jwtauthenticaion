@@ -304,3 +304,17 @@ class IndustriesWeServeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Industries_we_serve
         fields = '__all__'
+
+
+
+from .models import PrivacyPolicy, TermsAndConditions
+
+class PrivacyPolicySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PrivacyPolicy
+        fields = ['id', 'content']
+
+class TermsAndConditionsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TermsAndConditions
+        fields = ['id', 'content']

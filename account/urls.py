@@ -37,6 +37,8 @@ from .views import (
     QuestionsAnswerViewSet,
     IndustryViewSet,
     IndustriesWeServeViewSet,
+    PrivacyPolicyViewSet,
+    TermsAndConditionsViewSet,
     # CustomTokenObtainPairView,
     # AdminCreateAPIView,
     # AdminChangePasswordAPIView,
@@ -64,6 +66,8 @@ router.register(r'contactinquiries', ContactInquiryViewSet, basename='contactinq
 router.register(r'questionanswers', QuestionsAnswerViewSet, basename='questionanswer')  # New registration
 router.register(r'industries', IndustryViewSet, basename = 'industrie')
 router.register(r'companies', IndustriesWeServeViewSet, basename='companies_we_server')
+router.register(r'privacy-policy', PrivacyPolicyViewSet, basename='privacy-policy')
+router.register(r'terms-and-conditions', TermsAndConditionsViewSet, basename='terms-and-conditions')
 
 
 
@@ -88,6 +92,8 @@ urlpatterns = [
     path('api/questionanswers/<int:pk>/', QuestionsAnswerViewSet.as_view({'get': 'retrieve'}), name='questionanswer-detail'),
     path('api/industries/<int:pk>/', IndustryViewSet.as_view({'get': 'retrieve'}), name='industry-details'),
     path('api/companies_we_server/<int:pk>', IndustriesWeServeViewSet.as_view({'get': 'retrieve'}), name='companies_we_served_all_details'),
+    path('api/privacy-policy/<int:pk>/', PrivacyPolicyViewSet.as_view({'get': 'retrieve'}), name='privacy-policy-details'),
+    path('api/terms-and-conditions/<int:pk>/', TermsAndConditionsViewSet.as_view({'get': 'retrieve'}), name='terms-and-conditions-details'),
     # path('register/', UserRegistrationView.as_view(), name='register'),
     path('login/', UserLoginView.as_view(), name='login'),
     path('profile/', UserProfileView.as_view(), name='profile'),

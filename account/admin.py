@@ -2,7 +2,7 @@ from django.contrib import admin
 from account.models import User
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from .models import Categorie, Event,  ServiceType, Case, Career, Technologie, Industrie, Update, Testimonial, Project, Service, BlogPost, Comment, CompanyInformation, TeamMember, Author, ContactInquirie, PricingEstimate, QuestionsAnswer, Industries_we_serve
-from .forms import BlogPostForm,CaseForm
+from .forms import BlogPostForm,CaseForm,PrivacyPolicyForm,TermsAndConditionsForm
 from tinymce.widgets import TinyMCE
 from django.db import models  # This import is necessary for models.TextField
 
@@ -246,3 +246,24 @@ class QuestionsAnswerAdmin(admin.ModelAdmin):
 class CompaniesWeServeAdmin(admin.ModelAdmin):
     list_display = ['name', 'technologies']
     search_fields = ['name', 'technologies']
+
+
+
+
+from .models import PrivacyPolicy, TermsAndConditions
+
+@admin.register(PrivacyPolicy)
+class PrivacyPolicyAdmin(admin.ModelAdmin):
+    form = PrivacyPolicyForm
+    formfield_overrides = {
+        models.TextField: {'widget': TinyMCE(attrs={'cols': 80, 'rows': 30})},
+    }
+    list_display = ('id','content')
+
+@admin.register(TermsAndConditions)
+class TermsAndConditionsAdmin(admin.ModelAdmin):
+    form = TermsAndConditionsForm
+    formfield_overrides = {
+        models.TextField: {'widget': TinyMCE(attrs={'cols': 80, 'rows': 30})},
+    }
+    list_display = ('id','content')

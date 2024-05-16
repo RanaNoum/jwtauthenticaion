@@ -180,7 +180,7 @@ class Service(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
     image = models.ImageField(upload_to='Service_images/', blank=True, null=True)  # New ImageField
-    related_projects = models.ForeignKey(Project, on_delete=models.CASCADE)
+    related_projects = models.ForeignKey(Project, on_delete=models.CASCADE,blank=True,null=True)
 
 class RoleChoices(models.TextChoices):
     ADMIN = 'Admin', 'Administrator'
@@ -930,3 +930,18 @@ class Industries_we_serve(models.Model):
 
     def __str__(self):
         return self.name
+    
+
+
+
+class PrivacyPolicy(models.Model):
+    content = models.TextField()
+
+    def __str__(self):
+        return "Privacy Policy Content"
+
+class TermsAndConditions(models.Model):
+    content = models.TextField()
+
+    def __str__(self):
+        return "Terms and Conditions Content"
