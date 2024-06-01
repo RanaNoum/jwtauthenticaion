@@ -30,6 +30,7 @@ from .views import (
     UserProfileView,
     EventViewSet,
     CaseViewSet,
+    CaseImageViewSet,
     CareerViewSet,
     UpdateViewSet,
     PricingEstimateViewSet,
@@ -50,6 +51,7 @@ router = DefaultRouter()
 router.register(r'categories', CategoryViewSet, basename='categorie')
 router.register(r'events', EventViewSet, basename='event')
 router.register(r'cases', CaseViewSet, basename='case')
+router.register(r'case-images', CaseImageViewSet, basename='caseimage')
 router.register(r'careers', CareerViewSet, basename='career')
 router.register(r'updates', UpdateViewSet)
 router.register(r'pricing', PricingEstimateViewSet, basename='pricing')

@@ -168,16 +168,45 @@ class IndustrySerializer(serializers.ModelSerializer):
         model = Industrie
         fields = '__all__'
 
+# from .models import Case, CaseImage
 
+# class CaseImageSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = CaseImage
+#         fields = ['id', 'image']
+
+
+# class CaseSerializer(serializers.ModelSerializer):
+#     multiple_images = CaseImageSerializer(many=True, read_only=True)
+#     industries = IndustrySerializer(read_only=True)
+#     created_by = User
+#     service_type = ServiceTypeSerializer(many=True, read_only=True)
+#     technologies = TechnologySerializer(many=True, read_only=True)
+#     class Meta:
+#         model = Case
+#         fields = '__all__'  # Serialize all fields from the Case model
+
+from rest_framework import serializers
+from .models import Case, CaseImage
+
+class CaseImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CaseImage
+        fields = ['id', 'image']
 
 class CaseSerializer(serializers.ModelSerializer):
+    multiple_images = CaseImageSerializer(many=True, read_only=True)
     industries = IndustrySerializer(read_only=True)
     created_by = User
     service_type = ServiceTypeSerializer(many=True, read_only=True)
     technologies = TechnologySerializer(many=True, read_only=True)
+
     class Meta:
         model = Case
-        fields = '__all__'  # Serialize all fields from the Case model
+        fields = '__all__'
+
+
+
 
 
 class CategorySerializer(serializers.ModelSerializer):

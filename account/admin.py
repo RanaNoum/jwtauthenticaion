@@ -61,11 +61,65 @@ class CareerAdmin(admin.ModelAdmin):
 #     list_filter = ('status', 'priority', 'created_date')
 #     search_fields = ('title', 'description', 'case_number')
 #     date_hierarchy = 'created_date'
+
+
+
+# from django.contrib import admin
+# from .models import Case, CaseImage
+
+# class CaseImageInline(admin.TabularInline):
+#     model = CaseImage
+#     extra = 1
+
+# @admin.register(Case)
+# class CaseAdmin(admin.ModelAdmin):
+#     form = CaseForm
+#     formfield_overrides = {
+#         models.TextField: {'widget': TinyMCE(attrs={'cols': 80, 'rows': 30})},
+#     }
+#     list_display = ('title', 'status', 'priority', 'get_service_type', 'industries', 'get_technologies', 'created_by', 'multiple_images')
+#     search_fields = ('title', 'description')
+#     list_filter = ('status', 'priority', 'created_by', 'content')
+
+#     # def get_industries(self, obj):
+#     #     return ", ".join([industry.name for industry in obj.industries.all()])
+#     # get_industries.short_description = 'Industries'
+
+#     def get_service_type(self, obj):
+#         return ", ".join([service_types.choice_name for service_types in obj.service_type.all()])
+#     get_service_type.short_description = 'ServiceType'
+
+
+#     def get_technologies(self, obj):
+#         return ", ".join([technology.name for technology in obj.technologies.all()])
+#     get_technologies.short_description = 'Technologies'
+
+
+# @admin.register(CaseImage)
+# class CaseImageAdmin(admin.ModelAdmin):
+#     list_display = ['case', 'uploaded_at']
+   
+
 @admin.register(ServiceType)
 class ServiceTypeAdmin(admin.ModelAdmin):
     list_display = ['choice_name']
     
 
+
+
+from django.contrib import admin
+from django import forms
+from .models import Case, CaseImage
+from tinymce.widgets import TinyMCE
+
+class CaseImageInline(admin.TabularInline):
+    model = CaseImage
+    extra = 1
+
+class CaseForm(forms.ModelForm):
+    class Meta:
+        model = Case
+        fields = '__all__'
 
 @admin.register(Case)
 class CaseAdmin(admin.ModelAdmin):
@@ -76,19 +130,20 @@ class CaseAdmin(admin.ModelAdmin):
     list_display = ('title', 'status', 'priority', 'get_service_type', 'industries', 'get_technologies', 'created_by')
     search_fields = ('title', 'description')
     list_filter = ('status', 'priority', 'created_by', 'content')
-
-    # def get_industries(self, obj):
-    #     return ", ".join([industry.name for industry in obj.industries.all()])
-    # get_industries.short_description = 'Industries'
+    inlines = [CaseImageInline]
 
     def get_service_type(self, obj):
         return ", ".join([service_types.choice_name for service_types in obj.service_type.all()])
     get_service_type.short_description = 'ServiceType'
 
-
     def get_technologies(self, obj):
         return ", ".join([technology.name for technology in obj.technologies.all()])
     get_technologies.short_description = 'Technologies'
+
+@admin.register(CaseImage)
+class CaseImageAdmin(admin.ModelAdmin):
+    list_display = ['case', 'image']
+
 
 
 

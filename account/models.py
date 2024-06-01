@@ -259,12 +259,163 @@ class ContactInquirie(models.Model):
 
 
 
-class ServiceType(models.Model):
-    choice_name = models.TextField(max_length=50)
+# class ServiceType(models.Model):
+#     choice_name = models.TextField(max_length=50)
     
 
 
+# COUNTRY_CHOICES = [(country.name, country.name) for country in pycountry.countries]
+# class Case(models.Model):
+#     STATUS_CHOICES = [
+#         ('open', 'Open'),
+#         ('in_progress', 'In Progress'),
+#         ('closed', 'Closed'),
+#         ('on_hold', 'On Hold')
+#     ]
+
+#     PRIORITY_CHOICES = [
+#         ('high', 'High'),
+#         ('medium', 'Medium'),
+#         ('low', 'Low')
+#     ]
+
+#     title = models.CharField(max_length=255)
+#     description = models.CharField(max_length=255)
+#     featured_image = models.ImageField(upload_to='case_featured_images/', blank=True, null=True)
+#     content = models.TextField()
+#     service_type = models.ManyToManyField(ServiceType, blank=True)
+#     industries = models.ForeignKey(Industrie, on_delete=models.CASCADE)
+#     technologies = models.ManyToManyField(Technologie, blank=True)
+#     country = models.CharField(max_length=255, choices=COUNTRY_CHOICES, blank=True, null=True)
+#     country_image = models.ImageField(upload_to='case_country_images/', blank=True, null=True)
+#     status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='open')
+#     priority = models.CharField(max_length=50, choices=PRIORITY_CHOICES, default='medium')
+#     created_by = models.ForeignKey(User, related_name='created_cases', on_delete=models.CASCADE)
+#     created_date = models.DateTimeField(auto_now_add=True)
+#     modified_date = models.DateTimeField(auto_now=True)
+#     due_date = models.DateTimeField(null=True, blank=True)
+
+#     def __str__(self):
+#         return f"{self.title}"
+
+#     class Meta:
+#         ordering = ['-created_date']
+
+
+# from django.db import models
+# from django.contrib.auth.models import User
+# import pycountry
+
+# class ServiceType(models.Model):
+#     choice_name = models.TextField(max_length=50)
+
+# COUNTRY_CHOICES = [(country.name, country.name) for country in pycountry.countries]
+
+# class Case(models.Model):
+#     STATUS_CHOICES = [
+#         ('open', 'Open'),
+#         ('in_progress', 'In Progress'),
+#         ('closed', 'Closed'),
+#         ('on_hold', 'On Hold')
+#     ]
+
+#     PRIORITY_CHOICES = [
+#         ('high', 'High'),
+#         ('medium', 'Medium'),
+#         ('low', 'Low')
+#     ]
+
+#     title = models.CharField(max_length=255)
+#     description = models.CharField(max_length=255)
+#     featured_image = models.ImageField(upload_to='case_featured_images/', blank=True, null=True)
+#     content = models.TextField()
+#     service_type = models.ManyToManyField(ServiceType, blank=True)
+#     industries = models.ForeignKey('Industrie', on_delete=models.CASCADE)
+#     technologies = models.ManyToManyField('Technologie', blank=True)
+#     country = models.CharField(max_length=255, choices=COUNTRY_CHOICES, blank=True, null=True)
+#     country_image = models.ImageField(upload_to='case_country_images/', blank=True, null=True)
+#     status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='open')
+#     priority = models.CharField(max_length=50, choices=PRIORITY_CHOICES, default='medium')
+#     created_by = models.ForeignKey(User, related_name='created_cases', on_delete=models.CASCADE)
+#     created_date = models.DateTimeField(auto_now_add=True)
+#     modified_date = models.DateTimeField(auto_now=True)
+#     due_date = models.DateTimeField(null=True, blank=True)
+
+#     def __str__(self):
+#         return f"{self.title}"
+
+#     class Meta:
+#         ordering = ['-created_date']
+
+# class CaseImage(models.Model):
+#     case = models.ForeignKey(Case, related_name='multiple_images', on_delete=models.CASCADE)
+#     image = models.ImageField(upload_to='case_images/')
+#     uploaded_at = models.DateField(auto_now_add=True)
+
+#     def __str__(self):
+#         return f"Image for case {self.case.title}"
+
+# from django.conf import settings
+# from django.db import models
+# import pycountry
+
+# class ServiceType(models.Model):
+#     choice_name = models.TextField(max_length=50)
+
+# COUNTRY_CHOICES = [(country.name, country.name) for country in pycountry.countries]
+
+# class Case(models.Model):
+#     STATUS_CHOICES = [
+#         ('open', 'Open'),
+#         ('in_progress', 'In Progress'),
+#         ('closed', 'Closed'),
+#         ('on_hold', 'On Hold')
+#     ]
+
+#     PRIORITY_CHOICES = [
+#         ('high', 'High'),
+#         ('medium', 'Medium'),
+#         ('low', 'Low')
+#     ]
+
+#     title = models.CharField(max_length=255)
+#     description = models.CharField(max_length=255)
+#     featured_image = models.ImageField(upload_to='case_featured_images/', blank=True, null=True)
+#     content = models.TextField()
+#     service_type = models.ManyToManyField(ServiceType, blank=True)
+#     industries = models.ForeignKey('Industrie', on_delete=models.CASCADE)
+#     technologies = models.ManyToManyField('Technologie', blank=True)
+#     country = models.CharField(max_length=255, choices=COUNTRY_CHOICES, blank=True, null=True)
+#     country_image = models.ImageField(upload_to='case_country_images/', blank=True, null=True)
+#     status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='open')
+#     priority = models.CharField(max_length=50, choices=PRIORITY_CHOICES, default='medium')
+#     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='created_cases', on_delete=models.CASCADE)
+#     created_date = models.DateTimeField(auto_now_add=True)
+#     modified_date = models.DateTimeField(auto_now=True)
+#     due_date = models.DateTimeField(null=True, blank=True)
+#     multiple_images = models.ManyToManyField('CaseImage', blank=True)
+
+#     def __str__(self):
+#         return f"{self.title}"
+
+#     class Meta:
+#         ordering = ['-created_date']
+
+# class CaseImage(models.Model):
+#     case = models.ForeignKey(Case, related_name='case_images', on_delete=models.CASCADE)
+#     image = models.ImageField(upload_to='case_multiple_images/')
+
+
+
+from django.conf import settings
+from django.db import models
+import pycountry
+
+class ServiceType(models.Model):
+    choice_name = models.TextField(max_length=50)
+
 COUNTRY_CHOICES = [(country.name, country.name) for country in pycountry.countries]
+
 class Case(models.Model):
     STATUS_CHOICES = [
         ('open', 'Open'),
@@ -284,22 +435,34 @@ class Case(models.Model):
     featured_image = models.ImageField(upload_to='case_featured_images/', blank=True, null=True)
     content = models.TextField()
     service_type = models.ManyToManyField(ServiceType, blank=True)
-    industries = models.ForeignKey(Industrie, on_delete=models.CASCADE)
-    technologies = models.ManyToManyField(Technologie, blank=True)
+    industries = models.ForeignKey('Industrie', on_delete=models.CASCADE)
+    technologies = models.ManyToManyField('Technologie', blank=True)
     country = models.CharField(max_length=255, choices=COUNTRY_CHOICES, blank=True, null=True)
     country_image = models.ImageField(upload_to='case_country_images/', blank=True, null=True)
     status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='open')
     priority = models.CharField(max_length=50, choices=PRIORITY_CHOICES, default='medium')
-    created_by = models.ForeignKey(User, related_name='created_cases', on_delete=models.CASCADE)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='created_cases', on_delete=models.CASCADE)
     created_date = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)
     due_date = models.DateTimeField(null=True, blank=True)
+    multiple_images = models.ManyToManyField('CaseImage', blank=True, related_name='cases')
 
     def __str__(self):
         return f"{self.title}"
 
     class Meta:
         ordering = ['-created_date']
+
+class CaseImage(models.Model):
+    case = models.ForeignKey(Case, related_name='case_images', on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='case_multiple_images/')
+
+
+
+
+
+
+
 
 
 

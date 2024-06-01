@@ -177,10 +177,32 @@ class ServicetypeViewSet(viewsets.ModelViewSet):
     permission_classes = [IsGetRequestOrAdmin]  # Apply the custom permission
 
 
+
+
+from rest_framework import viewsets
+from .models import Case, CaseImage
+from .serializers import CaseSerializer, CaseImageSerializer
+
 class CaseViewSet(viewsets.ModelViewSet):
     queryset = Case.objects.all()
     serializer_class = CaseSerializer
     permission_classes = [IsGetRequestOrAdmin]  # Apply the custom permission
+
+
+class CaseImageViewSet(viewsets.ModelViewSet):
+    queryset = CaseImage.objects.all()
+    serializer_class = CaseImageSerializer
+    permission_classes = [IsGetRequestOrAdmin]  # Apply the custom permission
+
+
+
+
+
+
+# class CaseViewSet(viewsets.ModelViewSet):
+#     queryset = Case.objects.all()
+#     serializer_class = CaseSerializer
+#     permission_classes = [IsGetRequestOrAdmin]  # Apply the custom permission
 
     # def get_queryset(self):
     #     """
